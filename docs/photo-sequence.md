@@ -6,6 +6,8 @@ Il motore Canvas 2D è implementato e il percorso usa esclusivamente i 12 PNG fo
 
 Il lavoro viene conservato nel branch `photo-sequence`; `work` conserva la versione precedente. Nessun deployment pubblico.
 
+La successiva richiesta di generare i raccordi è stata provata con due candidati effettivi, entrambi scartati per alterazioni architettoniche: [analisi e prove](intermediate-frame-audit.md). Il totale rimane 12 originali; il completamento cinematografico continuo non è dichiarato raggiunto.
+
 ## Inventario e ordine verificati
 
 `media palazzo.zip` contiene 6 PNG e `Media ascensore.zip` ne contiene 5. Tutti sono RGB, 1122 × 1402 px, decodificati integralmente. Le voci `__MACOSX/._…` sono metadati, non fotogrammi. Le cartelle non erano presenti nel progetto: sono state scoperte negli allegati e importate in `public/sequence/` preservando nomi, cartelle e byte. Il manifest conserva SHA-256 e URL per ciascun originale.

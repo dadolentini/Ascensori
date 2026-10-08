@@ -1,5 +1,15 @@
 # Verifica finale
 
+## Tentativo di completamento degli intermedi — 8 ottobre 2026
+
+**Richiesta non completata:** due immagini candidate generate realmente con `image_gen` e scartate per alterazioni degli elementi fissi/prospettiva incoerente. Nessun nuovo frame integrato; sequenza ancora composta dai 12 originali. Analisi dei passaggi e file delle prove in [intermediate-frame-audit.md](intermediate-frame-audit.md).
+
+- Controllo diretto dei dodici originali: SHA-256 e dimensioni 1122 × 1402 verificati, tutti invariati.
+- `PLAYWRIGHT_PREVIEW=1 npx playwright test tests/e2e/photo-sequence.spec.ts --output test-results/intermediate-feasibility`: **3/3 superati**, con la build corrente del finale fotografico. Pin, scroll inverso, chiuso/aperto, cambio pagina, mobile e resize HiDPI restano funzionanti.
+- Questi test verificano l’integrità del percorso esistente; non attestano continuità cinematografica dei nuovi candidati, che non vengono caricati dall’applicazione.
+- Nessuna modifica a `src`, `public`, test, dipendenze, simulatore, configuratore o algoritmi. Sono aggiunte soltanto analisi e prove di scarto in `docs`; non è stata ripetuta la build perché il prodotto rimane invariato.
+- Restano i salti visivi fra viste distanziate e le dissolvenze della versione precedente. Non viene dichiarato un numero minimo di intermedi utilizzabili né una fluidità raggiunta. Nessun deployment pubblico.
+
 ## Finale fotografico integrato — 8 ottobre 2026
 
 Ricevuto ed estratto `Atrio moderno con ascensore aperto.png.zip`: un PNG RGB 1122 × 1402, aggiunto senza alterarne i byte come dodicesimo e ultimo frame. Il confronto visivo con la vista chiusa è documentato in [photo-sequence.md](photo-sequence.md). Il blocco per il file mancante, descritto nella sezione storica successiva, è risolto. Restano mancanti i fotogrammi intermedi: il passaggio chiuso→aperto è una dissolvenza reversibile fra i due originali.
