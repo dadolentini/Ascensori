@@ -6,7 +6,15 @@ async function seek(page: import('@playwright/test').Page, progress: number) {
     window.scrollTo({ top: el.getBoundingClientRect().top + scrollY + (el.clientHeight - innerHeight) * p, behavior: 'instant' });
   }, progress);
   await expect.poll(async () => Number(await page.locator('.journey').getAttribute('data-progress'))).toBeCloseTo(progress, 2);
-  await expect.poll(async () => Number(await page.locator('canvas').getAttribute('data-requested-frame'))).toBeCloseTo(Math.min(1, progress / .83) * (manifest.frames.length - 1), 3);
+  // Browser scroll coordinates and ScrollTrigger's end are rounded to pixels.
+  // Compare against the actual scroll distance, not the requested fraction.
+  const actualProgress = await page.locator('.journey').evaluate((el) => {
+    const top = el.getBoundingClientRect().top + scrollY;
+    const end = Math.round((el.clientHeight - innerHeight) * .83);
+    return Math.min(1, Math.max(0, (scrollY - top) / end));
+  });
+  await expect.poll(async () => Number(await page.locator('canvas').getAttribute('data-requested-frame')))
+    .toBeCloseTo(actualProgress * (manifest.frames.length - 1), 3);
   await expect(page.locator('canvas')).toHaveAttribute('data-frame-ready', 'true');
 }
 
@@ -25,6 +33,16 @@ test('photographic Canvas 2D is pinned, reversible and survives route navigation
   }
   await seek(page, .65); await screenshot(page, info, 'photographic-turn');
   await seek(page, .85); await screenshot(page, info, 'photographic-elevator');
+  await expect(page.locator('canvas')).toHaveAttribute('data-drawn-frames', String(manifest.frames.length - 1));
+  expect(manifest.frames.at(-1)!.source).toContain('ascensore aperto');
+  await seek(page, .83 * (manifest.frames.length - 2) / (manifest.frames.length - 1));
+  // A pixel cannot always land exactly on an integer frame. Check the closed
+  // original is drawn and the blend is within the distance of one scroll pixel.
+  const closed = manifest.frames.length - 2;
+  expect((await page.locator('canvas').getAttribute('data-drawn-frames'))!.split(',')).toContain(String(closed));
+  expect(Number(await page.locator('canvas').getAttribute('data-requested-frame'))).toBeCloseTo(closed, 2);
+  await screenshot(page, info, 'photographic-elevator-closed');
+  await seek(page, .85);
   await expect(page.locator('.math-overlay')).toContainText('ANTICIPARE LA DOMANDA');
   await page.getByRole('link', { name: /Gli algoritmi/ }).click();
   await page.getByRole('button', { name: /Torna all’esperienza/ }).click();

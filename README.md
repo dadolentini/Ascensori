@@ -1,6 +1,6 @@
 # VERTICALE — mobilità verticale intelligente
 
-Percorso fotografico controllato dallo scroll e simulatore di un gruppo di ascensori. Interfaccia italiana; simulazione della flotta indipendente dalla rappresentazione visiva. Il branch `photo-sequence` sostituisce il rendering Three.js; il finale è in attesa del file scaricabile dell’ascensore aperto, come descritto in [docs/photo-sequence.md](docs/photo-sequence.md).
+Percorso fotografico controllato dallo scroll e simulatore di un gruppo di ascensori. Interfaccia italiana; simulazione della flotta indipendente dalla rappresentazione visiva. Il branch `photo-sequence` sostituisce il rendering Three.js e include il finale con ascensore aperto, come descritto in [docs/photo-sequence.md](docs/photo-sequence.md).
 
 ## Avvio
 
@@ -30,7 +30,7 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 
 ## Esperienza
 
-- Canvas 2D fotografico: palazzo completo, ingresso, lobby, svolta a destra, avvicinamento all’ascensore, equazioni e configuratore. Gli 11 frame forniti sono collegati con dissolvenze reversibili; non vengono inventati fotogrammi intermedi.
+- Canvas 2D fotografico: palazzo completo, ingresso, lobby, svolta a destra, avvicinamento all’ascensore, apertura, equazioni e configuratore. I 12 frame forniti sono collegati con dissolvenze reversibili; non vengono inventati fotogrammi intermedi.
 - GSAP anima `seq.frame`; ScrollTrigger gestisce scrub e pin. Rendering su `requestAnimationFrame` solo quando necessario, preload prioritario e cache di bitmap limitata secondo il dispositivo.
 - Fotografie originali importate senza alterare i pixel; font e PDF locali. Nessuna ricostruzione Three.js o richiesta a servizi esterni. Inventario, ordine e lacune in [docs/photo-sequence.md](docs/photo-sequence.md).
 - DPR fino a 2 desktop/1,5 mobile, resize proporzionale, versione essenziale e preferenza di movimento ridotto con gli stessi frame. Il percorso funziona anche senza WebGL.

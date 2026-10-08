@@ -8,6 +8,9 @@ describe('supplied photographic frames', () => {
     expect(manifest.frames[0].source).toContain('17_44_44-1');
     expect(manifest.frames.findIndex((f) => f.phase === 'turn')).toBeGreaterThan(6);
     expect(manifest.frames.at(-1)!.phase).toBe('elevator');
+    expect(manifest.complete).toBe(true);
+    expect(manifest.frames.at(-2)!.source).toContain('17_44_51-6');
+    expect(manifest.frames.at(-1)!.source).toBe('Media ascensore/Atrio moderno con ascensore aperto.png');
   });
   it('preserves every original PNG byte and resolves every manifest URL', () => {
     expect(new Set(manifest.frames.map((frame) => frame.url)).size).toBe(manifest.frames.length);

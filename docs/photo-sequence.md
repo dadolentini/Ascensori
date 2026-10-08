@@ -2,13 +2,15 @@
 
 ## Stato della consegna
 
-Il motore Canvas 2D è implementato e il percorso usa esclusivamente gli 11 PNG scaricabili dei due archivi. La consegna finale è **in attesa del file dell’ascensore aperto**: l’immagine inviata inline è visibile in chat ma non è disponibile come allegato scaricabile nel workspace. Non viene ricreata con generazione d’immagini né sostituita con il precedente rendering.
+Il motore Canvas 2D è implementato e il percorso usa esclusivamente i 12 PNG forniti: gli 11 dei due archivi iniziali e l’immagine dell’ascensore aperto ricevuta in `Atrio moderno con ascensore aperto.png.zip`. Il finale mostra la dissolvenza reversibile fra chiuso e aperto. Nessuna immagine è ricreata o sostituita con il precedente rendering.
 
-Il lavoro viene conservato nel branch `photo-sequence`; `work` conserva la versione precedente finché il finale fotografico non è completo. Nessun deployment pubblico.
+Il lavoro viene conservato nel branch `photo-sequence`; `work` conserva la versione precedente. Nessun deployment pubblico.
 
 ## Inventario e ordine verificati
 
 `media palazzo.zip` contiene 6 PNG e `Media ascensore.zip` ne contiene 5. Tutti sono RGB, 1122 × 1402 px, decodificati integralmente. Le voci `__MACOSX/._…` sono metadati, non fotogrammi. Le cartelle non erano presenti nel progetto: sono state scoperte negli allegati e importate in `public/sequence/` preservando nomi, cartelle e byte. Il manifest conserva SHA-256 e URL per ciascun originale.
+
+Il terzo archivio contiene un solo PNG RGB, anch’esso 1122 × 1402 px, importato nella cartella `Media ascensore` con il suo nome originale. SHA-256: `ede90b1124dff496883af0a132a15a7e90cce7a2aa31bcb3f73c1eaa77f59726`. Il confronto visivo con la vista chiusa conferma portale, marmo retroilluminato, rivestimento in legno e illuminazione coerenti; piccoli dettagli e geometria interna differiscono fra le due viste. La dissolvenza non simula il moto fisico delle ante.
 
 La numerazione riparte e le due cartelle includono viste esterne: concatenare gli archivi o ordinare soltanto i nomi riporterebbe la camera fuori dall’edificio. Dopo l’ispezione visiva di tutte le immagini, l’ordine adottato è:
 
@@ -25,6 +27,7 @@ La numerazione riparte e le due cartelle includono viste esterne: concatenare gl
 | 8 | Media ascensore | 17_44_48-4.png | Direzione verso destra |
 | 9 | Media ascensore | 17_44_50-5.png | Ascensore dalla lobby |
 | 10 | Media ascensore | 17_44_51-6.png | Ascensore chiuso frontale |
+| 11 | Media ascensore | Atrio moderno con ascensore aperto.png | Ascensore aperto frontale |
 
 Il nome completo di ogni file è nel manifest. La provenienza fotografica fisica non viene attestata dal codice: gli asset preparati dall’utente sono la fonte visiva vincolante.
 
@@ -40,6 +43,6 @@ DPR limitato a 2 desktop e 1,5 mobile; variazione di viewport aggiorna DPR e bud
 
 ## Lacune e limiti
 
-Gli asset sono viste distanziate: mancano fotogrammi intermedi del movimento e dell’apertura. Le dissolvenze sono un montaggio reversibile degli originali, non una registrazione continua della camera né una simulazione fisica delle ante. Non viene applicato morphing, non vengono aggiunte geometrie e non vengono generati nuovi frame. L’immagine aperta deve essere ricevuta come file prima di completare il finale e la sua verifica.
+Gli asset sono viste distanziate: mancano fotogrammi intermedi del movimento e dell’apertura. Le dissolvenze sono un montaggio reversibile degli originali, non una registrazione continua della camera né una simulazione fisica delle ante. Non viene applicato morphing, non vengono aggiunte geometrie e non vengono generati nuovi frame. `complete` nel manifest indica che è disponibile anche il finale aperto; la voce `missing` continua a segnalare i fotogrammi intermedi mancanti.
 
 Configuratore, Worker, modello matematico, PDF, equazioni e dipendenze restano invariati. I vecchi test di geometria Three.js sono sostituiti da verifiche su asset, proporzioni, cache, scroll, pin e HiDPI. I due overflow già presenti nella pagina algoritmi a 320/375 px rimangono fuori dal refactoring visivo.

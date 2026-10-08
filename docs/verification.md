@@ -1,5 +1,18 @@
 # Verifica finale
 
+## Finale fotografico integrato — 8 ottobre 2026
+
+Ricevuto ed estratto `Atrio moderno con ascensore aperto.png.zip`: un PNG RGB 1122 × 1402, aggiunto senza alterarne i byte come dodicesimo e ultimo frame. Il confronto visivo con la vista chiusa è documentato in [photo-sequence.md](photo-sequence.md). Il blocco per il file mancante, descritto nella sezione storica successiva, è risolto. Restano mancanti i fotogrammi intermedi: il passaggio chiuso→aperto è una dissolvenza reversibile fra i due originali.
+
+- `npm test`: **70/70 superati in 8 file**, incluse verifiche su hash, risoluzioni e ordine chiuso→aperto; la verifica del finale è stata osservata fallire prima dell’integrazione e passare dopo.
+- `npm run build`: superato, TypeScript incluso. Nessuna modifica al motore Canvas, al simulatore, al configuratore, alle equazioni, al PDF o alle dipendenze in questa integrazione.
+- Esecuzione browser selezionata con il finale: **18/19 superati**. L’unico fallimento era un confronto fra la frazione di scroll richiesta e il frame calcolato: ScrollTrigger arrotonda la distanza ai pixel (3436 invece di 3436,2 nella viewport desktop). Il test ora usa la distanza effettiva dello scroll; il rendering rimane invariato.
+- Dopo tale correzione, **3/3 controlli del percorso superati** con `PLAYWRIGHT_PREVIEW=1 npx playwright test tests/e2e/photo-sequence.spec.ts --output test-results/photo-open-confirm`: finale aperto, ritorno alla vista chiusa, avanzamento di nuovo al finale, navigazione fra pagine, pin, mobile e ridimensionamento HiDPI. I sei flussi con Worker reale e gli altri controlli sono passati nell’esecuzione precedente; non è stata ripetuta l’intera suite dopo la modifica del solo test. Ispezionato lo screenshot del finale aperto della build.
+- I due controlli di overflow della pagina algoritmi a 320/375 px rimangono esclusi esplicitamente dalla selezione estesa, attivi nei test e già documentati come fallimenti preesistenti.
+- Benchmark con 12 frame, 90 campioni di scroll avanti/indietro, Chromium cloud DPR 1: desktop P95 **100 ms**, massimo **249,9 ms**, cache decodificata 75.506.112 byte; mobile P95 **33,4 ms**, massimo **50 ms**, cache 31.460.880 byte. Nessun long task osservato e nessun ridisegno a riposo dopo la stabilizzazione. JSON in `test-results/photo-open/photo-performance-*/photographic-scroll-performance.json`. Queste misure non certificano 60 FPS né prestazioni su Safari o dispositivi fisici.
+
+Codice nel branch `photo-sequence`; nessun deployment pubblico. Le verifiche successive sono storiche.
+
 ## Refactoring fotografico — versione in attesa del finale
 
 Il renderer Three.js è sostituito da Canvas 2D e GSAP/ScrollTrigger. Gli 11 frame degli archivi sono gli originali, verificati tramite SHA-256 e dimensioni; ordine, provenienza e lacune sono descritti in [photo-sequence.md](photo-sequence.md). **La foto dell’ascensore aperto inviata inline non è scaricabile: il finale resta da integrare e verificare.** Nessun deployment pubblico.

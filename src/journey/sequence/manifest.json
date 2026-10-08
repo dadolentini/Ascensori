@@ -1,8 +1,7 @@
 {
   "version": 1,
-  "complete": false,
+  "complete": true,
   "missing": [
-    "File scaricabile dell’ascensore aperto",
     "Fotogrammi intermedi fra le viste"
   ],
   "width": 1122,
@@ -72,6 +71,12 @@
       "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_51-6.png",
       "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_51-6.png",
       "sha256": "faf5a8a6204cb41e9e47bf490ed53e2a268064e1266c505be152cbb137ab2e11",
+      "phase": "elevator"
+    },
+    {
+      "source": "Media ascensore/Atrio moderno con ascensore aperto.png",
+      "url": "/sequence/Media%20ascensore/Atrio%20moderno%20con%20ascensore%20aperto.png",
+      "sha256": "ede90b1124dff496883af0a132a15a7e90cce7a2aa31bcb3f73c1eaa77f59726",
       "phase": "elevator"
     }
   ]
