@@ -1,5 +1,27 @@
 # Verifica finale
 
+## Refactoring fotografico — versione in attesa del finale
+
+Il renderer Three.js è sostituito da Canvas 2D e GSAP/ScrollTrigger. Gli 11 frame degli archivi sono gli originali, verificati tramite SHA-256 e dimensioni; ordine, provenienza e lacune sono descritti in [photo-sequence.md](photo-sequence.md). **La foto dell’ascensore aperto inviata inline non è scaricabile: il finale resta da integrare e verificare.** Nessun deployment pubblico.
+
+- `npm test`: **70/70 test superati in 8 file** sul codice finale. I test della geometria eliminata sono sostituiti da controlli su asset, proporzioni, cache e adattamento del budget; i test matematici e del configuratore rimangono invariati.
+- `npm run build`: superato, inclusa verifica TypeScript. Nessuna modifica a dipendenze, lockfile, PDF, `src/simulation`, `src/configurator` o `src/algorithms`.
+- Playwright sulla build finale: **19/19 controlli selezionati superati** con `PLAYWRIGHT_PREVIEW=1 npx playwright test --grep-invert 'within (320|375)px' --output test-results/photo-final`. Inclusi tutti i sei flussi con Worker reale, scroll reversibile, pin, ritorno dalla pagina algoritmi, conservazione dello stato, cache mobile, ridimensionamento desktop→tablet→mobile, DPR 3 limitato a 2/1,5, fallback Canvas non disponibile e movimento ridotto.
+- La precedente esecuzione estesa di questa revisione ha prodotto **18 superati e 2 falliti**: gli overflow già documentati della pagina algoritmi a 320/375 px. Le due asserzioni rimangono attive; il comando finale le esclude esplicitamente e la suite completa non è dichiarata verde. Il nuovo controllo tablet porta il totale attuale a 21.
+- Revisione specialistica mirata: corretti il layout fotografico fra 601 e 767 px e l’aggiornamento di DPR/budget dopo il ridimensionamento. Regressione osservata RED→GREEN; resize del buffer e disegno eseguiti nella stessa callback per evitare un buffer momentaneamente vuoto.
+- Ispezionati gli screenshot iniziali desktop e mobile, svolta e ascensore chiuso. Palazzo iniziale interamente visibile, proporzioni conservate, titolo separato dall’immagine su mobile. Le viste successive usano un ritaglio proporzionale; le dissolvenze fra viste sparse non equivalgono a una ripresa continua.
+
+Benchmark effettivo su Headless Chromium 151 nel cloud, DPR 1: 90 campioni `requestAnimationFrame` durante scroll avanti e indietro con decodifica degli originali, senza simulazione concomitante. Il test verifica campionamento e arresto dei ridisegni per 30 cicli dopo la stabilizzazione; **non impone né certifica un obiettivo FPS**.
+
+| Viewport | Tempo P95 | Massimo | Cache decodificata osservata | Long task osservati |
+| --- | --- | --- | --- | --- |
+| 1440 × 900 | 100 ms | 150 ms | 69.213.936 byte | 0 |
+| 375 × 812 | 33,4 ms | 50 ms | 31.460.880 byte | 0 |
+
+I JSON grezzi sono prodotti in `test-results/photo-final/photo-performance-*/photographic-scroll-performance.json` (artefatti locali ignorati da Git). Questi tempi non dimostrano fluidità a 60 FPS; rimane necessaria una verifica su dispositivi fisici e Safari. Il budget della cache non comprende Canvas, buffer di decodifica in corso e cache HTTP del browser. L’assenza di long task osservati non misura il lavoro del compositore.
+
+Le sezioni successive conservano le verifiche storiche della versione precedente.
+
 ## Revisione visiva — ingresso diretto e ascensore interno
 
 L’ultima richiesta sostituisce il corridoio, la svolta e i quattro portali della scena con un unico ascensore nella lobby. La flotta del simulatore rimane configurabile, con quattro cabine standard. Geometrie e finiture seguono i materiali analizzati; provenienza e adattamento sono descritti in [visual-reference.md](visual-reference.md).

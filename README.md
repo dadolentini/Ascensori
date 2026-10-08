@@ -1,6 +1,6 @@
 # VERTICALE — mobilità verticale intelligente
 
-Esperienza architettonica 3D e simulatore di un gruppo di ascensori, realizzati a partire dai materiali forniti. Interfaccia italiana; ingresso diretto nella lobby e apertura di un ascensore interno, simulazione della flotta configurabile indipendentemente dalla scena.
+Percorso fotografico controllato dallo scroll e simulatore di un gruppo di ascensori. Interfaccia italiana; simulazione della flotta indipendente dalla rappresentazione visiva. Il branch `photo-sequence` sostituisce il rendering Three.js; il finale è in attesa del file scaricabile dell’ascensore aperto, come descritto in [docs/photo-sequence.md](docs/photo-sequence.md).
 
 ## Avvio
 
@@ -30,10 +30,10 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 
 ## Esperienza
 
-- Scroll nativo continuo e reversibile: torre al tramonto, ingresso, lobby, avvicinamento all’ascensore interno, apertura delle ante, equazioni e configuratore.
-- Architettura vincolata ai riferimenti originali: campate arretrate e balconi, colonne avorio e sospensioni organiche, portale inox con display rosso e cabina a pannelli scuri. Fonti e adattamenti sono dichiarati in [docs/visual-reference.md](docs/visual-reference.md) e nel sito.
-- Rendering originale con React Three Fiber, geometrie condivise/istanziate, illuminazione e materiali generati localmente. Font e PDF serviti dal progetto; nessuna richiesta a servizi 3D esterni.
-- DPR limitato e qualità ridotta su mobile; caricamento differito del Canvas e arresto del rendering al termine del percorso. Versione essenziale, preferenza di movimento ridotto e fallback alla perdita/assenza di WebGL mantengono contenuti e simulatore utilizzabili.
+- Canvas 2D fotografico: palazzo completo, ingresso, lobby, svolta a destra, avvicinamento all’ascensore, equazioni e configuratore. Gli 11 frame forniti sono collegati con dissolvenze reversibili; non vengono inventati fotogrammi intermedi.
+- GSAP anima `seq.frame`; ScrollTrigger gestisce scrub e pin. Rendering su `requestAnimationFrame` solo quando necessario, preload prioritario e cache di bitmap limitata secondo il dispositivo.
+- Fotografie originali importate senza alterare i pixel; font e PDF locali. Nessuna ricostruzione Three.js o richiesta a servizi esterni. Inventario, ordine e lacune in [docs/photo-sequence.md](docs/photo-sequence.md).
+- DPR fino a 2 desktop/1,5 mobile, resize proporzionale, versione essenziale e preferenza di movimento ridotto con gli stessi frame. Il percorso funziona anche senza WebGL.
 - Configuratore semplificato: quattro input per ascensori, piani **escluso terra**, addetti complessivi e capacità in persone. Controlli +/− e media automatica per piano; orari e pause standard gestiti internamente.
 - Calcolo in Web Worker, annullamento, confronto di tre politiche, contatori di censura, CDF completa, apprendimento fuori campione, replay degli eventi e download CSV/JSON.
 - Pagina `/algoritmi` con tutte le 19 equazioni, unità, spiegazioni, esplorazioni di moto/capacità e collegamenti al PDF originale.
@@ -42,14 +42,14 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 
 | Cartella | Responsabilità |
 | --- | --- |
-| `src/journey` | Ambiente 3D, camera deterministica, animazioni, riferimenti e fallback statico |
+| `src/journey` | Canvas fotografico, GSAP/ScrollTrigger, manifest, cache, riferimenti e fallback statico |
 | `src/configurator` | Form, risultati, grafico, replay ed esportazioni |
 | `src/simulation` | Domanda seeded, apprendimento, NNLS, fisica, eventi, instradamento e statistiche |
 | `src/algorithms` | Equazioni autentiche e spiegazione del modello |
 | `tests` | Fixture numeriche, invarianti e accettazione browser |
 | `public/docs` | PDF tecnico autorevole fornito dall'utente |
 
-La scena riceve soltanto il progresso normalizzato dello scroll. Non legge o modifica lo stato del motore. Il Worker riceve uno scenario serializzabile e restituisce risultati, scenario, seed e versione del modello.
+Il renderer gestisce il progresso normalizzato dello scroll senza leggere o modificare lo stato del motore. Il Worker riceve uno scenario serializzabile e restituisce risultati, scenario, seed e versione del modello.
 
 ## Metodo matematico
 

@@ -55,8 +55,7 @@ test('missing WebGL leaves essential content and the Worker usable', async ({ pa
     });
   });
   await page.goto('/');
-  await expect(page.locator('canvas')).toHaveCount(0);
-  await expect(page.getByRole('region', { name: 'Percorso senza animazioni' })).toBeVisible();
+  await expect(page.locator('canvas')).toHaveAttribute('data-renderer', 'photographic-2d');
   await runSmallScenario(page, 2);
   await expect(page.locator('.metric-card')).toHaveCount(3);
   await expect(page.getByRole('navigation', { name: 'Navigazione principale' }).getByRole('link', { name: /Gli algoritmi/ })).toBeVisible();
@@ -64,14 +63,14 @@ test('missing WebGL leaves essential content and the Worker usable', async ({ pa
 
 test('essential mode changes rendering without losing form state', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('canvas')).toHaveAttribute('data-elevators', '1');
+  await expect(page.locator('canvas')).toHaveAttribute('data-renderer', 'photographic-2d');
   await page.getByLabel('Addetti complessivi', { exact: true }).fill('8');
   await page.getByRole('button', { name: 'Versione essenziale' }).click();
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Percorso senza animazioni' })).toBeVisible();
   await expect(page.getByLabel('Addetti complessivi', { exact: true })).toHaveValue('8');
-  await page.getByRole('button', { name: 'Esperienza 3D', exact: true }).click();
-  await expect(page.locator('canvas')).toHaveAttribute('data-elevators', '1');
+  await page.getByRole('button', { name: 'Esperienza fotografica', exact: true }).click();
+  await expect(page.locator('canvas')).toHaveAttribute('data-renderer', 'photographic-2d');
   await expect(page.getByLabel('Addetti complessivi', { exact: true })).toHaveValue('8');
 });
 

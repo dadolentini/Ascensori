@@ -19,8 +19,8 @@ import Formula from './components/Formula';
 import Icon from './components/Icon';
 import JourneyFallback from './journey/JourneyFallback';
 import VisualReferences from './journey/VisualReferences';
-import { journeyPose } from './journey/pose';
-const SceneCanvas = lazy(() => import('./components/SceneCanvas'));
+import photoManifest from './journey/sequence/manifest.json';
+const PhotoSequence = lazy(() => import('./journey/sequence/PhotoSequence'));
 class SceneBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; onFailure: () => void },
   { failed: boolean }
@@ -38,10 +38,10 @@ class SceneBoundary extends Component<
 }
 const phaseCopy = [
   { from: 0, title: 'L’edificio', n: '01' },
-  { from: 0.15, title: 'La soglia', n: '02' },
-  { from: 0.23, title: 'La lobby', n: '03' },
-  { from: 0.43, title: 'L’ascensore', n: '04' },
-  { from: 0.72, title: 'L’apertura', n: '05' },
+  { from: 0.23, title: 'La soglia', n: '02' },
+  { from: 0.43, title: 'La lobby', n: '03' },
+  { from: 0.6, title: 'La svolta', n: '04' },
+  { from: 0.72, title: 'L’ascensore', n: '05' },
   { from: 0.83, title: 'Il modello', n: '06' },
 ];
 export default function App() {
@@ -66,7 +66,7 @@ export default function App() {
     runId = useRef(0),
     homeScroll = useRef(0),
     timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const fallback = reduced || light || typeof WebGL2RenderingContext === 'undefined';
+  const fallback = reduced || light;
   const navigate = useCallback(
     (next: string) => {
       if (route === '/') homeScroll.current = window.scrollY;
@@ -92,30 +92,6 @@ export default function App() {
     m.addEventListener('change', f);
     return () => m.removeEventListener('change', f);
   }, []);
-  useEffect(() => {
-    if (route !== '/' || fallback) return;
-    let frame = 0;
-    const update = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const el = journey.current;
-        if (el) {
-          const span = el.offsetHeight - window.innerHeight;
-          setProgress(
-            Math.min(1, Math.max(0, (window.scrollY - el.offsetTop) / Math.max(1, span))),
-          );
-        }
-      });
-    };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
-    };
-  }, [route, fallback]);
   const dispose = () => {
     worker.current?.terminate();
     worker.current = null;
@@ -196,7 +172,6 @@ export default function App() {
         ?.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' });
   };
   const phase = phaseCopy.filter((p) => progress >= p.from).at(-1)!;
-  const pose = journeyPose(progress, window.innerWidth / window.innerHeight);
   const showHero = fallback || progress < 0.16,
     heroOpacity = fallback ? 1 : Math.max(0, 1 - progress / 0.14);
   const sceneLight = route !== '/' || fallback || progress > 0.18;
@@ -211,7 +186,7 @@ export default function App() {
       <a className="skip-link" href="#simulazione">
         Vai alla simulazione
       </a>
-      <header className={`site-header ${sceneLight ? 'header-light' : ''}`}>
+      <header className={`site-header ${route === '/' ? 'photographic-header' : ''} ${sceneLight ? 'header-light' : ''}`}>
         <a
           className="brand"
           href="/"
@@ -252,19 +227,21 @@ export default function App() {
         <main>
           <section
             ref={journey}
-            className={`journey ${fallback ? 'journey-static' : ''}`}
+            className={`journey journey-photographic ${fallback ? 'journey-static' : ''}`}
             aria-label="Viaggio architettonico"
             data-progress={progress.toFixed(4)}
-            data-phase={pose.phase}
+            data-phase={phase.title}
+            data-photo-stage={progress >= .72 && progress < .83 ? 'opening' : 'journey'}
           >
             <div className="journey-viewport">
               {fallback ? (
                 <JourneyFallback />
               ) : (
                 <SceneBoundary fallback={<JourneyFallback />} onFailure={() => setLight(true)}>
-                  <Suspense fallback={null}>
-                    <SceneCanvas
-                      progress={progress}
+                  <Suspense fallback={<JourneyFallback />}>
+                    <PhotoSequence
+                      initialProgress={progress}
+                      onProgress={setProgress}
                       onReady={() => setReady(true)}
                       onFailure={() => setLight(true)}
                     />
@@ -395,7 +372,7 @@ export default function App() {
                     setReady(false);
                   }}
                 >
-                  {light ? 'Esperienza 3D' : 'Versione essenziale'}
+                  {light ? 'Esperienza fotografica' : 'Versione essenziale'}
                 </button>
               </div>
               {!fallback && (
@@ -413,16 +390,16 @@ export default function App() {
                   '01 · L’ingresso',
                   '02 · La lobby',
                   '03 · L’ascensore all’interno',
-                  '04 · L’apertura e il modello',
+                  photoManifest.complete ? '04 · L’apertura e il modello' : '04 · L’ascensore e il modello',
                 ].map((t, i) => (
                   <article key={t}>
                     <img
-                      src={`/visual/scene-${['exterior', 'lobby', 'elevator-closed', 'elevator-open'][i]}.jpg`}
+                      src={photoManifest.frames[[0, 6, 9, photoManifest.frames.length - 1][i]].url}
                       alt={[
                         'La torre e il suo ingresso illuminato',
                         'La lobby con colonne chiare e lampade organiche',
                         'L’ascensore inox interno con le ante chiuse',
-                        'Lo stesso ascensore con le ante aperte',
+                        photoManifest.complete ? 'Lo stesso ascensore con le ante aperte' : 'Vista frontale dell’ascensore chiuso',
                       ][i]}
                       width="1440" height="900" loading="lazy" decoding="async"
                     />
@@ -432,7 +409,7 @@ export default function App() {
                         [
                           'Dalla facciata vetrata alla lobby in pietra chiara.',
                           'Colonne chiare, luce calda e un ingresso diretto.',
-                          'L’ascensore inox passa da chiuso ad aperto.',
+                          photoManifest.complete ? 'L’ascensore inox passa da chiuso ad aperto.' : 'L’avvicinamento al portale inox originale.',
                           'Capacità, costo marginale e previsione: le equazioni autentiche.',
                         ][i]
                       }

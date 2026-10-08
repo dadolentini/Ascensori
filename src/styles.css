@@ -10,6 +10,17 @@
   --paper: #f6f4ef;
   --serif: Georgia, 'Times New Roman', serif;
 }
+/* Match the photographic renderer's 768px framing breakpoint, including tablets.
+   Other sections retain their existing responsive rules. */
+@media (min-width: 601px) and (max-width: 767px) {
+  .journey-photographic .hero-copy { top: calc(45svh + 100px); }
+  .journey-photographic .hero-copy h1 { font-size: 36px; letter-spacing: -1px; margin-bottom: 12px; }
+  .journey-photographic .hero-copy .eyebrow { margin-bottom: 8px; }
+  .journey-photographic .hero-copy > p:not(.eyebrow) { font-size: 10px; line-height: 1.5; }
+  .journey-photographic .hero-journey-link { margin-top: 14px; }
+  .journey-photographic .sequence-poster,
+  .journey-photographic .journey-fallback img { width: 100%; max-width: none; height: 45svh; top: 88px; right: 0; left: 0; }
+}
 * {
   box-sizing: border-box;
 }
@@ -202,7 +213,7 @@ select:focus-visible {
 .journey-viewport {
   height: 100svh;
   width: 100%;
-  position: sticky;
+  position: relative;
   top: 0;
   overflow: hidden;
 }
@@ -213,6 +224,22 @@ select:focus-visible {
 .journey-viewport canvas {
   display: block;
 }
+.photo-sequence {
+  position: absolute;
+  inset: 0;
+  background: #102338;
+}
+.photo-sequence canvas,
+.sequence-poster {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+}
+.photo-sequence canvas { visibility: hidden; }
+.photo-sequence canvas[data-painted='true'] { visibility: visible; }
+.sequence-poster { object-fit: contain; width: auto; max-width: 90%; height: calc(100% - 160px); top: 80px; right: 5%; left: auto; }
+.photographic-header.header-light { background: #f6f4ef; }
 .journey-viewport:after {
   content: '';
   position: absolute;
@@ -467,10 +494,13 @@ select:focus-visible {
   background: #112638;
 }
 .journey-fallback img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 65% center;
+  position: absolute;
+  width: auto;
+  max-width: 90%;
+  height: calc(100% - 160px);
+  top: 80px;
+  right: 5%;
+  object-fit: contain;
 }
 .static-story article img {
   display: block;
@@ -2083,6 +2113,19 @@ select:focus-visible {
   .hero-copy > p:not(.eyebrow) {
     font-size: 11px;
   }
+  .journey-photographic .hero-copy {
+    top: calc(45svh + 100px);
+  }
+  .journey-photographic .hero-copy h1 {
+    font-size: 36px;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+  .journey-photographic .hero-copy .eyebrow { margin-bottom: 8px; }
+  .journey-photographic .hero-copy > p:not(.eyebrow) { font-size: 10px; line-height: 1.5; }
+  .journey-photographic .hero-journey-link { margin-top: 14px; }
+  .journey-photographic .sequence-poster,
+  .journey-photographic .journey-fallback img { width: 100%; max-width: none; height: 45svh; top: 88px; right: 0; left: 0; }
   .hero-journey-link {
     margin-top: 25px;
     font-size: 9px;
@@ -2143,26 +2186,26 @@ select:focus-visible {
   }
   /* During the opening, keep the upper door leaves and display unobstructed.
      The full mathematical card returns once the camera enters the cabin. */
-  .journey[data-phase='doors'] .math-overlay {
+  .journey[data-photo-stage='opening'] .math-overlay {
     top: auto;
     bottom: 12%;
     max-height: 30%;
     padding: 14px 18px;
   }
-  .journey[data-phase='doors'] .math-overlay h2 {
+  .journey[data-photo-stage='opening'] .math-overlay h2 {
     font-size: 22px;
   }
-  .journey[data-phase='doors'] .math-overlay .eyebrow {
+  .journey[data-photo-stage='opening'] .math-overlay .eyebrow {
     margin-bottom: 8px;
   }
-  .journey[data-phase='doors'] .math-step {
+  .journey[data-photo-stage='opening'] .math-step {
     margin-top: 8px;
     padding-top: 8px;
   }
-  .journey[data-phase='doors'] .katex-display {
+  .journey[data-photo-stage='opening'] .katex-display {
     margin: 6px 0;
   }
-  .journey[data-phase='doors'] .math-source {
+  .journey[data-photo-stage='opening'] .math-source {
     margin-top: 8px;
   }
   .math-step .katex {
