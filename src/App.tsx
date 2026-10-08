@@ -20,6 +20,7 @@ import Icon from './components/Icon';
 import JourneyFallback from './journey/JourneyFallback';
 import VisualReferences from './journey/VisualReferences';
 import photoManifest from './journey/sequence/manifest.json';
+import photoOriginals from './journey/sequence/originals.json';
 const PhotoSequence = lazy(() => import('./journey/sequence/PhotoSequence'));
 class SceneBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; onFailure: () => void },
@@ -394,7 +395,7 @@ export default function App() {
                 ].map((t, i) => (
                   <article key={t}>
                     <img
-                      src={photoManifest.frames[[0, 6, 9, photoManifest.frames.length - 1][i]].url}
+                      src={photoOriginals[[0, 6, 9, photoOriginals.length - 1][i]].url}
                       alt={[
                         'La torre e il suo ingresso illuminato',
                         'La lobby con colonne chiare e lampade organiche',

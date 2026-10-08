@@ -1,5 +1,7 @@
 # Verifica dei fotogrammi intermedi — 8 ottobre 2026
 
+Questa relazione conserva il **tentativo precedente**, con 12 frame attivi e due prove scartate. Dopo i nuovi allegati e l’autorizzazione alle correzioni, lo stato aggiornato è in [sequence-integration.md](sequence-integration.md). Gli indici 0–11 qui sotto identificano gli originali, non la timeline attiva ampliata.
+
 ## Esito
 
 **Il completamento cinematografico richiesto non è riuscito.** Sono stati generati realmente due candidati con lo strumento `image_gen`, riferimenti locali e vincoli espliciti su camera, geometria, materiali e illuminazione. Entrambi sono stati scartati dopo il confronto con gli originali. Nessun candidato entra nel manifest o viene caricato dalla landing: la sequenza rimane di **12 originali e 0 intermedi integrati**. Non vengono presentati duplicati, zoom o dissolvenze come nuovi fotogrammi.

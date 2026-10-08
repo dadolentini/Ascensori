@@ -1,0 +1,537 @@
+{
+  "date": "2026-10-08",
+  "counts": {
+    "uploaded": 21,
+    "selectedUploaded": 2,
+    "generatedCandidates": 8,
+    "acceptedGenerated": 6,
+    "generatedIntermediates": 4,
+    "correctedFrames": 2,
+    "activeFrames": 18,
+    "preservedOriginalFiles": 12
+  },
+  "originalNumbering": "original-00 is first official source; one-based source_pair in generation notes refers to official references, not active indices",
+  "uploaded": [
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_024_orig06_to_orig07.png",
+      "sha256": "d972de9b279033f4891ae1fd1585ddcdccabd2b05e9057605361a10918d126b4",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 24,
+      "referenceOriginal": "original-06",
+      "fittedZoom": 1.02423,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject",
+      "reason": "Adds enlargement immediately before source7→8 widens/backtracks; worsens reverse jump.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_025_orig06_to_orig07.png",
+      "sha256": "51a84ad0ed4433922ad5a1d530955d95b718e395ad3dc5478e87fc677a784bdb",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 25,
+      "referenceOriginal": "original-07",
+      "fittedZoom": 1.04035,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject",
+      "reason": "Redundant digital crop of same source as selected neighboring variant.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_026_orig06_to_orig07.png",
+      "sha256": "828d83b3950b070ed0dc0f9903ea2e5d9a3e65aa165c514fd331f513bf3c3df0",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 26,
+      "referenceOriginal": "original-07",
+      "fittedZoom": 1.02046,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject",
+      "reason": "Redundant digital crop of same source as selected neighboring variant.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_027_orig07_to_orig08.png",
+      "sha256": "8c1ae12c62156735b21ba245aab9cf910d645fe75366d1079c887e9e37ab816c",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 27,
+      "referenceOriginal": "original-07",
+      "fittedZoom": 1.04294,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject_after_scope_update",
+      "reason": "Repeats entrance-frame artifact of original8; excluded once original8 is corrected/replaced.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_028_orig07_to_orig08.png",
+      "sha256": "6d37e4f787a1ccf9b8f79f6647b26ab442afa9418f8ab2b9eb3b76143ad8aca4",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 28,
+      "referenceOriginal": "original-08",
+      "fittedZoom": 1.06122,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject",
+      "reason": "Redundant digital crop of same source as selected neighboring variant.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_029_orig07_to_orig08.png",
+      "sha256": "3118d2f5ecf6376ed14f85c49f2c5fd5dd1f73edf42d870e8268ac01efdae734",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 29,
+      "referenceOriginal": "original-08",
+      "fittedZoom": 1.03258,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject",
+      "reason": "Redundant digital crop of same source as selected neighboring variant.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_030_orig08_to_orig09.png",
+      "sha256": "d58b4e15f66fe40a6b25b57f7bd9b9b33db9beb82b89d4bc1a226acd59de04e7",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 30,
+      "referenceOriginal": "original-08",
+      "fittedZoom": 1.06645,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "accept_as_digital_crop",
+      "reason": "Clean rightward crop provides one short pacing step into the turn; source geometry preserved, no claim of new parallax.",
+      "activeId": "supplied-extra-030"
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_031_orig08_to_orig09.png",
+      "sha256": "ab973542b5d88799ceebe21d25ee5805b3dfc5d18ec824c12ac82a5b4efd4330",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 31,
+      "referenceOriginal": "original-09",
+      "fittedZoom": 1.07192,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject",
+      "reason": "Redundant digital crop of same source as selected neighboring variant.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_032_orig08_to_orig09.png",
+      "sha256": "bab6f4aeb459b903b959df5b4feb5bc6d51cedaa1bfe8c9878f5afbe28f0ff46",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 32,
+      "referenceOriginal": "original-09",
+      "fittedZoom": 1.03678,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "reject",
+      "reason": "Redundant digital crop of same source as selected neighboring variant.",
+      "activeId": null
+    },
+    {
+      "archive": "Cartella2.zip",
+      "source": "Cartella2/extra_033_orig09_to_orig10.png",
+      "sha256": "c6c92e019739e9e5c4207481d6c605092e7afa038c01c91ccbb3b9ff192438b7",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 33,
+      "referenceOriginal": "original-09",
+      "fittedZoom": 1.08375,
+      "classification": "digital crop/zoom of original; no new viewpoint",
+      "decision": "accept_as_digital_crop",
+      "reason": "Clean rightward crop provides one short pacing step into the turn; source geometry preserved, no claim of new parallax.",
+      "activeId": "supplied-extra-033"
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_013_orig02_to_orig03.png",
+      "sha256": "b28c2073661681b95209ceac84b63640aa229e3135c87de1349cd8d9598498da",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 13,
+      "referenceOriginal": "original-02",
+      "fittedZoom": 0.85995,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_014_orig02_to_orig03.png",
+      "sha256": "acafb9595655c15f62b76772bb101dfeb4fc50f81d5a40188aec6666e25593cb",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 14,
+      "referenceOriginal": "original-03",
+      "fittedZoom": 0.91377,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_015_orig02_to_orig03.png",
+      "sha256": "12e3ed53fb63d7b2a14f55141da1f297efd564158bf0722116e81ba41a4a0d93",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 15,
+      "referenceOriginal": "original-03",
+      "fittedZoom": 0.9409,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_016_orig02_to_orig03.png",
+      "sha256": "79fdd97fdb5695b73b01b5bc6d66cf63a08a71e91ce9b06a8ad0591a8e740eaf",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 16,
+      "referenceOriginal": "original-03",
+      "fittedZoom": 0.9695,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_017_orig03_to_orig04.png",
+      "sha256": "8312af297fa7f869f8425b3947e7988630c52e8a4fb98761235894beb7e15012",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 17,
+      "referenceOriginal": "original-03",
+      "fittedZoom": 0.92592,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_018_orig03_to_orig04.png",
+      "sha256": "612ebbb5f756fa63722d52e8cff09ba087e582a60e48e7a881224703c37ec6f9",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 18,
+      "referenceOriginal": "original-04",
+      "fittedZoom": 0.91739,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_019_orig03_to_orig04.png",
+      "sha256": "fcc5be8c9390607de60558bf9ae738b78aa015d386567a3956b9f17b1235645a",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 19,
+      "referenceOriginal": "original-04",
+      "fittedZoom": 0.95689,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_020_orig04_to_orig05.png",
+      "sha256": "4f07caf59470b247b0e5bcd9eda071377f7a4d4b3afdbb082750086f173d46ff",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 20,
+      "referenceOriginal": "original-04",
+      "fittedZoom": 0.8902,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_021_orig04_to_orig05.png",
+      "sha256": "508812050de5f259fab59b1fd5e12b8cc9213972382b554ad0688804119a34f3",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 21,
+      "referenceOriginal": "original-05",
+      "fittedZoom": 0.94936,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_022_orig05_to_orig06.png",
+      "sha256": "3cdc1d21335f2a1dce5a79f2d853256c47033182702effd9a5b25ecc99b8e12e",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 22,
+      "referenceOriginal": "original-05",
+      "fittedZoom": 0.98032,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    },
+    {
+      "archive": "cartella 3.zip",
+      "source": "cartella 3/extra_023_orig05_to_orig06.png",
+      "sha256": "010e051526130e3a0e427c42a9c45b51d0fc538c371594e28707edc3de541683",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "extra": 23,
+      "referenceOriginal": "original-06",
+      "fittedZoom": 0.98044,
+      "classification": "digitally reduced next anchor with repeated/stretched border pixels; no new viewpoint",
+      "decision": "reject",
+      "reason": "Repeated source-edge bands, plus redundant view. If used for comparison only, place BEFORE source anchor; placing after it reverses enlargement.",
+      "activeId": null
+    }
+  ],
+  "generated": [
+    {
+      "id": "tower-approach-mid",
+      "source_pair": [
+        1,
+        2
+      ],
+      "fraction": 0.4,
+      "stage": "exterior descent and forward approach",
+      "decision": "accept",
+      "limitations": [
+        "Camera fraction is approximate, not reconstructed from known 3D poses.",
+        "Regenerated window interior/foliage details and brighter landscaping lighting; tower/podium/canopy arrangement broadly preserved."
+      ],
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "4849f027bb735afb4bac209cf50850148fe2f6156273afc064e72e91013fc952",
+      "candidateFile": "exec-f6833d8b-d0ae-4985-92a1-74a41355d4c9.png",
+      "activeId": "generated-tower-approach"
+    },
+    {
+      "id": "portal-alignment-mid",
+      "source_pair": [
+        10,
+        11
+      ],
+      "fraction": 0.65,
+      "stage": "final shallow-oblique alignment to closed elevator",
+      "decision": "accept",
+      "limitations": [
+        "Camera fraction is approximate.",
+        "Floor veins/reflections and the small lobby sliver regenerate; fixed controls stay on the left jamb."
+      ],
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "9e15be8677c883b6fcfe17da673e27ce26bbf38ed755af2ea884ef3df6cc064b",
+      "candidateFile": "exec-19161c3f-ccdd-42d0-a5eb-b34e0b517374.png",
+      "activeId": "generated-elevator-alignment"
+    },
+    {
+      "id": "doors-partial",
+      "source_pair": [
+        11,
+        12
+      ],
+      "fraction": 0.29,
+      "stage": "center opening; two leaves visible",
+      "decision": "accept",
+      "aperture_notes": "Approximate clear opening x502..622 versus full aperture x345..767; slot center differs by roughly6px and exposed leaf widths by roughly12px.",
+      "limitations": [
+        "Requested one-third opening rendered as about29%.",
+        "Static geometry is visually consistent rather than pixel identical.",
+        "Cabin lighting/metal reflections vary slightly from full-open source."
+      ],
+      "static_region_mae_255": 3.699,
+      "static_region_rmse_255": 6.392,
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "a9897823dcf4d3be1abd4bab6ded43ee227f80facdf246f7273ab0c3f4b2fea3",
+      "candidateFile": "exec-dd3a9788-4e32-494d-8192-8913f0ee98da.png",
+      "activeId": "generated-doors-partial"
+    },
+    {
+      "id": "doors-open-corrected",
+      "source_pair": [
+        11,
+        12
+      ],
+      "fraction": 1,
+      "stage": "fully open endpoint corrected to closed frame fixed geometry",
+      "decision": "accept",
+      "replace_active_original": 12,
+      "aperture_notes": "Open aperture x345..767, controls remain around x320 as in original11; original12 controls around x292 were corrected.",
+      "limitations": [
+        "Original12 remains preserved as source; only active final endpoint should use this derivative.",
+        "Cabin has minor regenerated ceiling/back-wall texture and reflection differences."
+      ],
+      "static_region_mae_255": 3.948,
+      "static_region_rmse_255": 7.763,
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "6f3d485ae8e15a41dd1ee179f9306dc1d3e3568a95985a842203572c3cbe8c0b",
+      "candidateFile": "exec-4d850eef-dfb2-4710-b11a-19dfad072dbd.png",
+      "activeId": "corrected-elevator-open"
+    },
+    {
+      "id": "doors-initial-probe",
+      "source_pair": [
+        11,
+        12
+      ],
+      "fraction": null,
+      "stage": "attempted half-open",
+      "decision": "reject",
+      "reason": "Roughly85% clear opening with asymmetric leaves; cannot represent symmetric physical center opening.",
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "f7066768dfe167dd472f9dd3c98254e97a8427aa0d619d0b8359283897a27063",
+      "candidateFile": "exec-5978bd23-ad5e-4778-903d-2ed5fb051fff.png",
+      "activeId": null
+    },
+    {
+      "id": "doors-wide-partial",
+      "source_pair": [
+        11,
+        12
+      ],
+      "fraction": 0.7,
+      "stage": "wide partial center-opening state with balanced narrow leaves",
+      "decision": "accept",
+      "aperture_notes": "Approximate clear gapx411..705, width294 versus fullwidth422: about70%. Both leaves approximately65px visible.",
+      "limitations": [
+        "Requested65% rendered about70%.",
+        "Marble texture and cabin back-wall seams have small regenerated differences; fixed controls/outer frame visually align."
+      ],
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "17c9fb13f48f57d1af8c9f75343397c41d906ad0c4c65d3eb7ff615c4be8369b",
+      "static_region_mae_255": 6.072,
+      "static_region_rmse_255": 10.215,
+      "candidateFile": "exec-eecae5d4-4d0a-49a5-8672-e5e87a6a1b7f.png",
+      "activeId": "generated-doors-wide"
+    },
+    {
+      "id": "lobby-inside-corrected",
+      "source_pair": [
+        7,
+        9
+      ],
+      "fraction": 0.45,
+      "stage": "original8 minimal entrance-frame removal",
+      "decision": "reject",
+      "primary_source_original": 8,
+      "replace_active_original": 8,
+      "limitations": [
+        "Do not use; replaced by final targeted repair."
+      ],
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "b35da9e746d8876759cd7aaf30b73e107fbdb8f898b5ddd3b17787e679c0c79d",
+      "reason": "Removal of entrance frame succeeded, but invented an extra far-left partial cylinder; repaired separately.",
+      "candidateFile": "exec-8e6f3861-6a4d-47eb-ad02-05460949726f.png",
+      "activeId": null
+    },
+    {
+      "id": "lobby-inside-final",
+      "source_pair": [
+        7,
+        9
+      ],
+      "fraction": 0.45,
+      "stage": "inside-lobby turn; minimal correction of original8 entrance artifact",
+      "decision": "accept",
+      "primary_source_original": 8,
+      "replace_active_original": 8,
+      "dimensions": [
+        1122,
+        1402
+      ],
+      "sha256": "3a5404b5af34ff92c1fb073312919dbfb014fffa6b8c7fb60b84075bd43eb539",
+      "targeted_correction": "Removed only invented extreme-left cylinder from rejected lobby edit, replacing strip with flat ivory wall/plant context; existing left cylinder remains.",
+      "limitations": [
+        "Main original8 desk/right-column/pendant composition retained; peripheral wall/plant and floor-threshold fill regenerated.",
+        "Camera stage fraction is approximate; this correction removes an impossible foreground entrance reappearance rather than reconstructing3D camera pose."
+      ],
+      "candidateFile": "exec-76888921-42b1-422d-9895-3fe5ebf95a53.png",
+      "activeId": "corrected-lobby-turn"
+    }
+  ],
+  "runtimeManifest": "../../src/journey/sequence/manifest.json",
+  "originalReferences": "../../src/journey/sequence/originals.json"
+}

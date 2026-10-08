@@ -1,4 +1,5 @@
 import manifest from './sequence/manifest.json';
+import originals from './sequence/originals.json';
 
 export interface JourneyFallbackProps {
   phase?: string;
@@ -9,7 +10,7 @@ export function JourneyFallback({ phase = 'exterior' }: JourneyFallbackProps) {
   const exterior = phase === 'exterior' || phase === 'entrance';
   const lobby = phase === 'lobby';
   const closed = phase === 'elevator' || phase === 'approach';
-  const frame = manifest.frames[exterior ? 0 : lobby ? 6 : closed ? 9 : manifest.frames.length - 1];
+  const frame = originals[exterior ? 0 : lobby ? 6 : closed ? 9 : originals.length - 1];
   const description = exterior
     ? 'Edificio vetrato con balconi laterali e ingresso illuminato.'
     : lobby

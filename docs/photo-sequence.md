@@ -2,11 +2,11 @@
 
 ## Stato della consegna
 
-Il motore Canvas 2D è implementato e il percorso usa esclusivamente i 12 PNG forniti: gli 11 dei due archivi iniziali e l’immagine dell’ascensore aperto ricevuta in `Atrio moderno con ascensore aperto.png.zip`. Il finale mostra la dissolvenza reversibile fra chiuso e aperto. Nessuna immagine è ricreata o sostituita con il precedente rendering.
+Il motore Canvas 2D è implementato e il percorso attivo comprende 18 frame: 10 originali, 2 ritagli selezionati dai nuovi allegati, 4 intermedi generati e 2 correzioni mirate. L’apertura attraversa gli stati chiuso, circa 29%, circa 70% e aperto. Tutti i 12 PNG originali rimangono intatti; due derivati corretti sostituiscono soltanto le rispettive viste nella timeline attiva. Inventario e motivazioni aggiornati in [sequence-integration.md](sequence-integration.md).
 
 Il lavoro viene conservato nel branch `photo-sequence`; `work` conserva la versione precedente. Nessun deployment pubblico.
 
-La successiva richiesta di generare i raccordi è stata provata con due candidati effettivi, entrambi scartati per alterazioni architettoniche: [analisi e prove](intermediate-frame-audit.md). Il totale rimane 12 originali; il completamento cinematografico continuo non è dichiarato raggiunto.
+Il precedente tentativo aveva scartato due candidati per alterazioni architettoniche: [analisi storica e prove](intermediate-frame-audit.md). Dopo i nuovi allegati e l’autorizzazione a correggere le incoerenze sono stati accettati sei nuovi asset generati. Le viste distanziate e le variazioni residue impediscono comunque di dichiarare una ripresa continua geometricamente calibrata.
 
 ## Inventario e ordine verificati
 
@@ -14,7 +14,7 @@ La successiva richiesta di generare i raccordi è stata provata con due candidat
 
 Il terzo archivio contiene un solo PNG RGB, anch’esso 1122 × 1402 px, importato nella cartella `Media ascensore` con il suo nome originale. SHA-256: `ede90b1124dff496883af0a132a15a7e90cce7a2aa31bcb3f73c1eaa77f59726`. Il confronto visivo con la vista chiusa conferma portale, marmo retroilluminato, rivestimento in legno e illuminazione coerenti; piccoli dettagli e geometria interna differiscono fra le due viste. La dissolvenza non simula il moto fisico delle ante.
 
-La numerazione riparte e le due cartelle includono viste esterne: concatenare gli archivi o ordinare soltanto i nomi riporterebbe la camera fuori dall’edificio. Dopo l’ispezione visiva di tutte le immagini, l’ordine adottato è:
+La numerazione riparte e le due cartelle includono viste esterne: concatenare gli archivi o ordinare soltanto i nomi riporterebbe la camera fuori dall’edificio. Dopo l’ispezione visiva di tutte le immagini, l’ordine dei **riferimenti originali** è quello seguente. Queste posizioni identificano gli originali in `originals.json`, non gli indici della timeline attiva a 18 frame.
 
 | Posizione | Cartella originale | File, parte temporale del nome | Vista |
 | --- | --- | --- | --- |
@@ -31,13 +31,13 @@ La numerazione riparte e le due cartelle includono viste esterne: concatenare gl
 | 10 | Media ascensore | 17_44_51-6.png | Ascensore chiuso frontale |
 | 11 | Media ascensore | Atrio moderno con ascensore aperto.png | Ascensore aperto frontale |
 
-Il nome completo di ogni file è nel manifest. La provenienza fotografica fisica non viene attestata dal codice: gli asset preparati dall’utente sono la fonte visiva vincolante.
+Il nome completo e l’hash di ogni originale sono in `originals.json`. Il manifest attivo distingue `original`, `supplied-crop`, `generated` e `corrected`, con riferimenti e sostituzioni espliciti. La provenienza fotografica fisica non viene attestata dal codice: gli asset preparati dall’utente sono la fonte visiva vincolante.
 
 ## Rendering e risorse
 
-`PhotoSequence.tsx` usa `ctx.drawImage()`, una proprietà numerica `seq.frame` animata con `gsap.to()`, ScrollTrigger con `scrub` e pin della viewport nella sezione. Il tratto fotografico occupa l’83% del percorso; l’ultimo frame rimane disponibile durante le equazioni e il passaggio al configuratore. Lo stesso valore di scroll produce la stessa dissolvenza in entrambe le direzioni.
+`PhotoSequence.tsx` usa `ctx.drawImage()`, una proprietà numerica `seq.frame` animata con `gsap.to()`, ScrollTrigger con `scrub` e pin della viewport nella sezione. Ogni frame ha uno stop normalizzato `at`: aggiungere un raccordo non sposta arbitrariamente le fasi del percorso. Il tratto fotografico occupa l’83% dello scroll; l’ultimo frame rimane disponibile durante le equazioni e il passaggio al configuratore. Lo stesso valore di scroll produce lo stesso stato visivo in entrambe le direzioni.
 
-Un solo `requestAnimationFrame` pendente accorpa gli aggiornamenti. Il buffer si ridisegna soltanto quando cambiano frame, dissolvenza, dimensioni o disponibilità delle immagini. In attesa di un frame conserva la vista già dipinta; il poster originale copre il caricamento iniziale. Ridimensionamento e disegno del buffer sono eseguiti insieme.
+Un solo `requestAnimationFrame` pendente accorpa gli aggiornamenti. Il buffer si ridisegna soltanto quando cambiano frame, dissolvenza, inquadratura, dimensioni o disponibilità delle immagini. L’inquadratura iniziale passa gradualmente da fotografia intera a copertura della viewport, anche quando il vicino sta ancora caricando. In attesa di immagini conserva la vista già dipinta; il poster originale copre il caricamento iniziale. Ridimensionamento e disegno del buffer sono eseguiti insieme.
 
 La cache contiene immagini decodificate con budget 96 MiB su desktop e 32 MiB per layout mobile/dispositivi limitati; 3 o 2 decodifiche simultanee. Preserva il frame iniziale e la coppia attuale, dà priorità ai vicini e ricarica gli originali durante il ritorno. I bitmap vengono chiusi all’evizione/unmount; richieste in corso annullate. Il budget non comprende i buffer del browser, il Canvas e la cache HTTP.
 
@@ -45,6 +45,6 @@ DPR limitato a 2 desktop e 1,5 mobile; variazione di viewport aggiorna DPR e bud
 
 ## Lacune e limiti
 
-Gli asset sono viste distanziate: mancano fotogrammi intermedi del movimento e dell’apertura. Le dissolvenze sono un montaggio reversibile degli originali, non una registrazione continua della camera né una simulazione fisica delle ante. Non viene applicato morphing, non vengono aggiunte geometrie e non vengono generati nuovi frame. `complete` nel manifest indica che è disponibile anche il finale aperto; la voce `missing` continua a segnalare i fotogrammi intermedi mancanti.
+Gli asset sono ancora viste distanziate, integrate con pochi raccordi generati e dissolvenze reversibili. Restano variazioni di luce e prospettiva fra alcuni originali e piccoli cambiamenti di texture/riflessi nei derivati. Gli stati intermedi delle ante rendono più graduale l’apertura, ma non costituiscono una simulazione meccanica calibrata. Non vengono aggiunte geometrie 3D. `complete` nel manifest indica che è disponibile il finale aperto; `missing` segnala il limite della ripresa continua e della camera non calibrata.
 
 Configuratore, Worker, modello matematico, PDF, equazioni e dipendenze restano invariati. I vecchi test di geometria Three.js sono sostituiti da verifiche su asset, proporzioni, cache, scroll, pin e HiDPI. I due overflow già presenti nella pagina algoritmi a 320/375 px rimangono fuori dal refactoring visivo.

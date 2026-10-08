@@ -1,6 +1,31 @@
 # Verifica finale
 
-## Tentativo di completamento degli intermedi — 8 ottobre 2026
+## Sequenza ampliata e correzioni — 8 ottobre 2026
+
+Integrati 18 frame attivi: 10 originali, 2 ritagli selezionati dai nuovi archivi, 4 intermedi generati e 2 correzioni mirate. Tutti i 12 originali sono preservati byte per byte. Selezione e limiti in [sequence-integration.md](sequence-integration.md), inventario completo in [visual-audit/sequence-selection.json](visual-audit/sequence-selection.json).
+
+- `npm test`: **75/75 superati in 9 file**, dopo l’ultima modifica al renderer. Inclusi hash/dimensioni degli asset, originali invariati, stop ordinati, aperture crescenti, timeline ponderata/inversa, proporzioni e continuità dell’inquadratura iniziale.
+- `npm run build`: **superato**, inclusa verifica TypeScript, dopo l’ultima modifica al renderer.
+- `PLAYWRIGHT_PREVIEW=1 npx playwright test --grep-invert 'within (320|375)px' --output test-results/expanded-sequence`: **19/19 superati** prima della correzione mirata finale. Comprende tutti i sei flussi del simulatore con Worker reale, esportazioni, annullamento, algoritmi, riferimenti, fallback, responsive e percorso fotografico.
+- La revisione indipendente ha individuato un blocco della transizione iniziale contain→cover quando il frame vicino non è disponibile. Una nuova prova browser trattiene davvero il download del secondo frame: osservata fallire perché la larghezza dipinta restava ferma, poi passare dopo l’inclusione del progresso dell’inquadratura nella firma di ridisegno.
+- Dopo tale correzione, `PLAYWRIGHT_PREVIEW=1 npx playwright test tests/e2e/photo-sequence.spec.ts tests/e2e/photo-performance.spec.ts --output test-results/expanded-sequence-confirm`: **6/6 superati**. Sono i quattro controlli del percorso (incluso il nuovo test di caricamento lento) e i due benchmark. Verificati pin, avanti/indietro, stati delle ante, navigazione fra pagine, mobile, resize HiDPI, budget cache e assenza di ridisegni a riposo. Non è stata ripetuta la suite del simulatore dopo questa sola correzione visiva.
+- Ispezionati i candidati selezionati e gli screenshot della build per apertura e palazzo iniziale mobile. I nuovi WebP sono lossless: confronto diretto dei buffer RGB con i PNG di partenza, tutti uguali.
+- `git diff --exit-code -- src/simulation src/configurator src/algorithms public/docs package.json package-lock.json`: nessuna modifica. Anche i test dei flussi Worker rimangono invariati.
+
+Benchmark finale Chromium cloud, GPU software, DPR 1, 90 campioni rAF di scroll avanti/indietro con decodifica reale:
+
+| Viewport | P95 intervallo rAF | Massimo | Cache decodificata |
+| --- | ---: | ---: | ---: |
+| 1440 × 900 | 116,6 ms | 150 ms | 94.382.640 byte |
+| 375 × 812 | 50 ms | 50 ms | 31.460.880 byte |
+
+Nessun long task osservato; nessun ridisegno durante 30 paint dopo stabilizzazione. JSON e screenshot in `test-results/expanded-sequence-confirm/`, esclusi da Git. Questi test registrano prestazioni, **non impongono né dimostrano 60 FPS**. Non sono una misura su Safari o telefoni fisici; le variazioni della macchina cloud e della rasterizzazione software limitano i confronti fra esecuzioni.
+
+I due test di overflow nella pagina algoritmi a 320/375 px restano esclusi esplicitamente dalla selezione estesa e attivi nella suite: sono fallimenti preesistenti fuori dallo scope. Restano anche blending fra viste distanziate, differenze di luce/punto di vista negli originali e piccoli dettagli rigenerati. Non viene dichiarata continuità geometrica assoluta.
+
+Branch `photo-sequence`, nessun deployment pubblico. Le sezioni seguenti descrivono versioni precedenti.
+
+## Tentativo precedente di completamento degli intermedi — 8 ottobre 2026
 
 **Richiesta non completata:** due immagini candidate generate realmente con `image_gen` e scartate per alterazioni degli elementi fissi/prospettiva incoerente. Nessun nuovo frame integrato; sequenza ancora composta dai 12 originali. Analisi dei passaggi e file delle prove in [intermediate-frame-audit.md](intermediate-frame-audit.md).
 

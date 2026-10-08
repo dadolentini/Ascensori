@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "complete": true,
   "missing": [
-    "Fotogrammi intermedi fra le viste"
+    "Ripresa continua e camera calibrata: i raccordi generati sono approssimazioni visive"
   ],
   "width": 1122,
   "height": 1402,
@@ -11,73 +11,272 @@
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_44_44-1.png",
       "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_44_44-1.png",
       "sha256": "afe57dbe30b624cc1e57ae1a525d8c1beb0cc3b506429f54664888a575a26bb7",
-      "phase": "exterior"
+      "phase": "exterior",
+      "id": "original-00",
+      "at": 0,
+      "kind": "original",
+      "references": [
+        "original-00"
+      ]
+    },
+    {
+      "id": "generated-tower-approach",
+      "source": "Generato/generated-tower-approach.png",
+      "url": "/sequence/generated/generated-tower-approach.webp",
+      "kind": "generated",
+      "at": 0.028,
+      "phase": "exterior",
+      "references": [
+        "original-00",
+        "original-01"
+      ],
+      "sha256": "b3d3a4962086be79d0e0beb29b24dbf6fadbdcd588bba0a5183337d265a2b76c",
+      "sourceSha256": "4849f027bb735afb4bac209cf50850148fe2f6156273afc064e72e91013fc952",
+      "pixelsSha256": "135abe6e193457b1f649b7f83307b1a97b5660fbc3a81df304baf734155abeac",
+      "sourceBytes": 2858294,
+      "bytes": 2275380,
+      "lossless": true
     },
     {
       "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_45-2.png",
       "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_45-2.png",
       "sha256": "14299a5f9cd1a2628097c418e14113c16e8f07f06ae8ddc388d55d30be0c7e3b",
-      "phase": "exterior"
+      "phase": "exterior",
+      "id": "original-01",
+      "at": 0.07,
+      "kind": "original",
+      "references": [
+        "original-01"
+      ]
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_50-1.png",
       "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_50-1.png",
       "sha256": "beca3fec6d62c31bd8d37127fad92d560f1440a5286f82350ce256fbb70c6cd8",
-      "phase": "exterior"
+      "phase": "exterior",
+      "id": "original-02",
+      "at": 0.16,
+      "kind": "original",
+      "references": [
+        "original-02"
+      ]
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_50-2.png",
       "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_50-2.png",
       "sha256": "2bcbe4aa0b054ee488f19fa8d2ad1b845f42772c2493d9bcc2593fa44a0fd6af",
-      "phase": "entrance"
+      "phase": "entrance",
+      "id": "original-03",
+      "at": 0.25,
+      "kind": "original",
+      "references": [
+        "original-03"
+      ]
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_51-3.png",
       "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_51-3.png",
       "sha256": "ae77817db6887adddeb2a4e3e5c176b5606d110365b820d9290eced8252b4869",
-      "phase": "entrance"
+      "phase": "entrance",
+      "id": "original-04",
+      "at": 0.34,
+      "kind": "original",
+      "references": [
+        "original-04"
+      ]
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_52-4.png",
       "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_52-4.png",
       "sha256": "945dbb1409956c952a372e9763457b42340f41a51b0757b9a60e4c8b3acd929f",
-      "phase": "entrance"
+      "phase": "entrance",
+      "id": "original-05",
+      "at": 0.43,
+      "kind": "original",
+      "references": [
+        "original-05"
+      ]
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_53-5.png",
       "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_53-5.png",
       "sha256": "ef6bce55c7c201985a196a3ec2618e022539bc1fb972396a690be12a2773996d",
-      "phase": "lobby"
+      "phase": "lobby",
+      "id": "original-06",
+      "at": 0.52,
+      "kind": "original",
+      "references": [
+        "original-06"
+      ]
     },
     {
-      "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_46-3.png",
-      "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_46-3.png",
-      "sha256": "923adee3def2e9874f30a0002614cd2d551545c939e5ae3d4e59059f36b6f4f8",
-      "phase": "lobby"
+      "id": "corrected-lobby-turn",
+      "source": "Generato/corrected-lobby-turn.png",
+      "url": "/sequence/generated/corrected-lobby-turn.webp",
+      "kind": "corrected",
+      "at": 0.6,
+      "phase": "lobby",
+      "references": [
+        "original-06",
+        "original-07",
+        "original-08"
+      ],
+      "replaces": "original-07",
+      "sha256": "e48524494b5b968f9e9e087cb33b1262c60be6256c8d96851621abc95ba1e1b1",
+      "sourceSha256": "3a5404b5af34ff92c1fb073312919dbfb014fffa6b8c7fb60b84075bd43eb539",
+      "pixelsSha256": "c56d80267fa6319c212fe58d8bd7292b66636adfd88e3cd81bd563317b31154e",
+      "sourceBytes": 1978316,
+      "bytes": 1458736,
+      "lossless": true
     },
     {
       "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_48-4.png",
       "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_48-4.png",
       "sha256": "0b007e4cb374cdf62a9200c57b0e9e2ca129ce5951319561ccea4c314aff9507",
-      "phase": "turn"
+      "phase": "turn",
+      "id": "original-08",
+      "at": 0.7,
+      "kind": "original",
+      "references": [
+        "original-08"
+      ]
+    },
+    {
+      "id": "supplied-extra-030",
+      "source": "Cartella2/extra_030_orig08_to_orig09.png",
+      "url": "/sequence/supplied/supplied-extra-030.webp",
+      "kind": "supplied-crop",
+      "at": 0.7333,
+      "phase": "turn",
+      "references": [
+        "original-08",
+        "original-09"
+      ],
+      "sha256": "53951561e452cba98a739438dd19fa5953dc7f1fb79214128119a9e454554522",
+      "sourceSha256": "d58b4e15f66fe40a6b25b57f7bd9b9b33db9beb82b89d4bc1a226acd59de04e7",
+      "pixelsSha256": "6075efb11dc6ccf6241c9b827931914e5e4be97654e224ffc78444ad4163ab3a",
+      "sourceBytes": 2083732,
+      "bytes": 1452056,
+      "lossless": true
     },
     {
       "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_50-5.png",
       "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_50-5.png",
       "sha256": "341de8bd3ab99a98a4c5fe28f73c8d376ce9517646ef0b1f63dca0fbb3f2c344",
-      "phase": "elevator"
+      "phase": "elevator",
+      "id": "original-09",
+      "at": 0.79,
+      "kind": "original",
+      "references": [
+        "original-09"
+      ]
+    },
+    {
+      "id": "supplied-extra-033",
+      "source": "Cartella2/extra_033_orig09_to_orig10.png",
+      "url": "/sequence/supplied/supplied-extra-033.webp",
+      "kind": "supplied-crop",
+      "at": 0.8233,
+      "phase": "elevator",
+      "references": [
+        "original-09",
+        "original-10"
+      ],
+      "sha256": "44f4ab7716db6d8eb95faa1ae60f9c4b932d57e5f9b93d93fcc96359109d4a46",
+      "sourceSha256": "c6c92e019739e9e5c4207481d6c605092e7afa038c01c91ccbb3b9ff192438b7",
+      "pixelsSha256": "995bc39c9081097b8e093a23fbee94c3eb234d931661a27a531eec9a29bc7999",
+      "sourceBytes": 1881924,
+      "bytes": 1311800,
+      "lossless": true
+    },
+    {
+      "id": "generated-elevator-alignment",
+      "source": "Generato/generated-elevator-alignment.png",
+      "url": "/sequence/generated/generated-elevator-alignment.webp",
+      "kind": "generated",
+      "at": 0.842,
+      "phase": "elevator",
+      "references": [
+        "original-09",
+        "original-10"
+      ],
+      "sha256": "9a0ef0dc6f70820ac278e19c31bfad2082067f154158a3537fdc02b33017cb0a",
+      "sourceSha256": "9e15be8677c883b6fcfe17da673e27ce26bbf38ed755af2ea884ef3df6cc064b",
+      "pixelsSha256": "0ab2955c084465b8f29be9f6ab4ddb9746415cbaa58e5efe51edd26245387f21",
+      "sourceBytes": 1765431,
+      "bytes": 1236956,
+      "lossless": true
     },
     {
       "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_51-6.png",
       "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_51-6.png",
       "sha256": "faf5a8a6204cb41e9e47bf490ed53e2a268064e1266c505be152cbb137ab2e11",
-      "phase": "elevator"
+      "phase": "elevator",
+      "id": "original-10",
+      "at": 0.87,
+      "kind": "original",
+      "references": [
+        "original-10"
+      ],
+      "aperture": 0
     },
     {
-      "source": "Media ascensore/Atrio moderno con ascensore aperto.png",
-      "url": "/sequence/Media%20ascensore/Atrio%20moderno%20con%20ascensore%20aperto.png",
-      "sha256": "ede90b1124dff496883af0a132a15a7e90cce7a2aa31bcb3f73c1eaa77f59726",
-      "phase": "elevator"
+      "id": "generated-doors-partial",
+      "source": "Generato/generated-doors-partial.png",
+      "url": "/sequence/generated/generated-doors-partial.webp",
+      "kind": "generated",
+      "at": 0.909,
+      "phase": "elevator",
+      "references": [
+        "original-10",
+        "original-11"
+      ],
+      "sha256": "5ec3e69d270718c6c29d62ed9920d990231123ca1c227728c7ee32a4b8d16bc1",
+      "sourceSha256": "a9897823dcf4d3be1abd4bab6ded43ee227f80facdf246f7273ab0c3f4b2fea3",
+      "pixelsSha256": "61d78e5ecf2588973ac00af6b206cde856b87bac00fc26292e4f5d72b8a03b9f",
+      "sourceBytes": 1662277,
+      "bytes": 1146664,
+      "lossless": true,
+      "aperture": 0.29
+    },
+    {
+      "id": "generated-doors-wide",
+      "source": "Generato/generated-doors-wide.png",
+      "url": "/sequence/generated/generated-doors-wide.webp",
+      "kind": "generated",
+      "at": 0.961,
+      "phase": "elevator",
+      "references": [
+        "original-10",
+        "original-11"
+      ],
+      "sha256": "c5f077e7c4f6234e88f1d1fb4c2f63b506edbdbaf506f136ac1c8d6d750cf9dc",
+      "sourceSha256": "17c9fb13f48f57d1af8c9f75343397c41d906ad0c4c65d3eb7ff615c4be8369b",
+      "pixelsSha256": "7eab7c391565c58bb2daf5d808147d56a5c3edff869bf087908f47d337c7e3e6",
+      "sourceBytes": 1635650,
+      "bytes": 1138318,
+      "lossless": true,
+      "aperture": 0.7
+    },
+    {
+      "id": "corrected-elevator-open",
+      "source": "Generato/corrected-elevator-open.png",
+      "url": "/sequence/generated/corrected-elevator-open.webp",
+      "kind": "corrected",
+      "at": 1,
+      "phase": "elevator",
+      "references": [
+        "original-10",
+        "original-11"
+      ],
+      "sha256": "d2b8787d1a0f25fdbef72904ccd195f99325aca147a21ec43a6404a91ad0d3a8",
+      "sourceSha256": "6f3d485ae8e15a41dd1ee179f9306dc1d3e3568a95985a842203572c3cbe8c0b",
+      "pixelsSha256": "38672c99e1464cfa0c046707261b104e257c33d8f770cba8cd8a87673f22fe36",
+      "sourceBytes": 1676647,
+      "bytes": 1164956,
+      "lossless": true,
+      "aperture": 1,
+      "replaces": "original-11"
     }
   ]
 }

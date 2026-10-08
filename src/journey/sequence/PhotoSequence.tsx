@@ -3,7 +3,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import manifest from './manifest.json';
 import { FrameCache, type DecodedFrame } from './cache';
-import { imageRectangle, backingSize } from './fit';
+import { photoRectangle, backingSize } from './fit';
+import { frameAtProgress, progressAtFrame } from './timeline';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,7 +13,8 @@ export default function PhotoSequence({ initialProgress = 0, onProgress, onReady
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const posterRef = useRef<HTMLImageElement>(null);
-  const posterIndex = useRef(Math.round(Math.min(1, initialProgress / .83) * (manifest.frames.length - 1)));
+  const stops = manifest.frames.map((frame) => frame.at);
+  const posterIndex = useRef(Math.round(frameAtProgress(initialProgress / .83, stops)));
   const callbacks = useRef({ onProgress, onReady, onFailure });
   callbacks.current = { onProgress, onReady, onFailure };
   useEffect(() => {
@@ -53,17 +55,9 @@ export default function PhotoSequence({ initialProgress = 0, onProgress, onReady
       }, manifest.width * manifest.height * 4);
 
     function drawImage(image: DecodedFrame, index: number, alpha: number) {
-      const initial = index === 0;
-      const initialHeight = width < 768 ? height * .45 : Math.max(1, height - 160);
-      const rect = imageRectangle(image.width, image.height, width, initial ? initialHeight : height,
-        initial ? 'contain' : 'cover');
-      if (initial) {
-        rect.y += width < 768 ? 88 : 80;
-        if (width >= 768) rect.x = Math.max(0, width - rect.width - width * .05);
-      } else if (index < 6) {
-        // These portrait exterior views place the entrance in the lower portion.
-        rect.y = (height - rect.height) * .8;
-      }
+      const phase = manifest.frames[index].phase;
+      const rect = photoRectangle(image.width, image.height, width, height,
+        progressAtFrame(seq.frame, stops), phase === 'exterior' || phase === 'entrance');
       ctx!.globalAlpha = alpha;
       ctx!.drawImage(image.source, rect.x, rect.y, rect.width, rect.height);
       canvas.dataset.imageRect = JSON.stringify(rect);
@@ -74,6 +68,7 @@ export default function PhotoSequence({ initialProgress = 0, onProgress, onReady
       const frame = Math.max(0, Math.min(manifest.frames.length - 1, seq.frame));
       const lower = Math.floor(frame), upper = Math.ceil(frame), blend = frame - lower;
       canvas.dataset.requestedFrame = frame.toFixed(4);
+      canvas.dataset.frameId = manifest.frames[Math.round(frame)].id;
       canvas.dataset.cacheBytes = String(cache.bytes);
       const first = cache.get(lower), second = cache.get(upper);
       canvas.dataset.frameReady = String(!!first && !!second);
@@ -83,7 +78,9 @@ export default function PhotoSequence({ initialProgress = 0, onProgress, onReady
       const base = cache.get(baseIndex);
       if (!base) return;
       const overlay = first && second && lower !== upper ? second : undefined;
-      const nextSignature = `${baseIndex}:${overlay ? upper : baseIndex}:${overlay ? blend.toFixed(4) : 0}:${width}:${height}:${dpr}`;
+      // Framing keeps moving even while the adjacent photograph is downloading.
+      const framing = Math.min(.18, progressAtFrame(frame, stops)).toFixed(6);
+      const nextSignature = `${baseIndex}:${overlay ? upper : baseIndex}:${overlay ? blend.toFixed(4) : 0}:${framing}:${width}:${height}:${dpr}`;
       if (!resized && nextSignature === signature) return;
       // Canvas dimensions clear its buffer. Resize and redraw atomically in this
       // paint callback, after a decoded image is available, never in ResizeObserver.
@@ -122,7 +119,8 @@ export default function PhotoSequence({ initialProgress = 0, onProgress, onReady
       pin: viewport, pinSpacing: false, anticipatePin: 1,
       onUpdate: (trigger) => callbacks.current.onProgress(trigger.progress),
       onRefresh: (trigger) => { resize(); callbacks.current.onProgress(trigger.progress); } });
-    const tween = gsap.to(seq, { frame: manifest.frames.length - 1, ease: 'none',
+    const tween = gsap.to(seq, { frame: manifest.frames.length - 1,
+      ease: (p: number) => frameAtProgress(p, stops) / (manifest.frames.length - 1),
       onUpdate: () => { cache.focus(seq.frame); requestRender(); },
       scrollTrigger: { trigger: section, start: 'top top', end: () => `+=${span() * .83}`,
         scrub: .18, invalidateOnRefresh: true } });

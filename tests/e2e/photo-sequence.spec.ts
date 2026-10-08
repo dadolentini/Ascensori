@@ -1,5 +1,32 @@
 import { test, expect, screenshot } from './browser.spec';
 import manifest from '../../src/journey/sequence/manifest.json' with { type: 'json' };
+import { frameAtProgress } from '../../src/journey/sequence/timeline';
+
+test('initial framing keeps moving when the next photograph is still downloading', async ({ page }) => {
+  let release!: () => void;
+  const blocked = new Promise<void>((resolve) => { release = resolve; });
+  await page.route(`**${manifest.frames[1].url}`, async (route) => {
+    await blocked; await route.continue();
+  });
+  try {
+    await page.goto('/');
+    await expect(page.locator('canvas')).toHaveAttribute('data-painted', 'true');
+    async function move(progress: number) {
+      await page.locator('.journey').evaluate((el, p) => window.scrollTo({
+        top: el.getBoundingClientRect().top + scrollY + (el.clientHeight - innerHeight) * .83 * p,
+        behavior: 'instant',
+      }), progress);
+      await expect.poll(async () => Number(await page.locator('canvas').getAttribute('data-requested-frame')))
+        .toBeCloseTo(frameAtProgress(progress, manifest.frames.map((frame) => frame.at)), 2);
+    }
+    await move(.005);
+    const initialWidth = JSON.parse((await page.locator('canvas').getAttribute('data-image-rect'))!).width;
+    await move(.02);
+    await expect(page.locator('canvas')).toHaveAttribute('data-frame-ready', 'false');
+    await expect.poll(async () => JSON.parse((await page.locator('canvas').getAttribute('data-image-rect'))!).width)
+      .toBeGreaterThan(initialWidth + 1);
+  } finally { release(); }
+});
 
 async function seek(page: import('@playwright/test').Page, progress: number) {
   await page.locator('.journey').evaluate((el, p) => {
@@ -14,7 +41,7 @@ async function seek(page: import('@playwright/test').Page, progress: number) {
     return Math.min(1, Math.max(0, (scrollY - top) / end));
   });
   await expect.poll(async () => Number(await page.locator('canvas').getAttribute('data-requested-frame')))
-    .toBeCloseTo(actualProgress * (manifest.frames.length - 1), 3);
+    .toBeCloseTo(frameAtProgress(actualProgress, manifest.frames.map((frame) => frame.at)), 3);
   await expect(page.locator('canvas')).toHaveAttribute('data-frame-ready', 'true');
 }
 
@@ -34,14 +61,17 @@ test('photographic Canvas 2D is pinned, reversible and survives route navigation
   await seek(page, .65); await screenshot(page, info, 'photographic-turn');
   await seek(page, .85); await screenshot(page, info, 'photographic-elevator');
   await expect(page.locator('canvas')).toHaveAttribute('data-drawn-frames', String(manifest.frames.length - 1));
-  expect(manifest.frames.at(-1)!.source).toContain('ascensore aperto');
-  await seek(page, .83 * (manifest.frames.length - 2) / (manifest.frames.length - 1));
+  const closed = manifest.frames.findIndex((frame) => frame.id === 'original-10');
+  await seek(page, .83 * manifest.frames[closed].at);
   // A pixel cannot always land exactly on an integer frame. Check the closed
   // original is drawn and the blend is within the distance of one scroll pixel.
-  const closed = manifest.frames.length - 2;
   expect((await page.locator('canvas').getAttribute('data-drawn-frames'))!.split(',')).toContain(String(closed));
   expect(Number(await page.locator('canvas').getAttribute('data-requested-frame'))).toBeCloseTo(closed, 2);
   await screenshot(page, info, 'photographic-elevator-closed');
+  for (const frame of manifest.frames.filter((frame) => frame.kind === 'generated' && frame.phase === 'elevator')) {
+    await seek(page, .83 * frame.at);
+    await screenshot(page, info, frame.id);
+  }
   await seek(page, .85);
   await expect(page.locator('.math-overlay')).toContainText('ANTICIPARE LA DOMANDA');
   await page.getByRole('link', { name: /Gli algoritmi/ }).click();

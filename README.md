@@ -1,6 +1,6 @@
 # VERTICALE — mobilità verticale intelligente
 
-Percorso fotografico controllato dallo scroll e simulatore di un gruppo di ascensori. Interfaccia italiana; simulazione della flotta indipendente dalla rappresentazione visiva. Il branch `photo-sequence` sostituisce il rendering Three.js e include il finale con ascensore aperto, come descritto in [docs/photo-sequence.md](docs/photo-sequence.md).
+Percorso fotografico controllato dallo scroll e simulatore di un gruppo di ascensori. Interfaccia italiana; simulazione della flotta indipendente dalla rappresentazione visiva. Il branch `photo-sequence` usa Canvas 2D e una sequenza di 18 frame, inclusa l’apertura progressiva dell’ascensore. Selezione, provenienza e limiti sono descritti in [docs/sequence-integration.md](docs/sequence-integration.md).
 
 ## Avvio
 
@@ -30,9 +30,9 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 
 ## Esperienza
 
-- Canvas 2D fotografico: palazzo completo, ingresso, lobby, svolta a destra, avvicinamento all’ascensore, apertura, equazioni e configuratore. I 12 frame forniti sono collegati con dissolvenze reversibili; non vengono inventati fotogrammi intermedi.
+- Canvas 2D fotografico: palazzo completo, ingresso, lobby, svolta a destra, avvicinamento all’ascensore, apertura, equazioni e configuratore. Sequenza attiva di 18 frame: 10 originali, 2 ritagli forniti, 4 intermedi generati e 2 correzioni mirate. I 12 file originali restano intatti e disponibili come riferimenti.
 - GSAP anima `seq.frame`; ScrollTrigger gestisce scrub e pin. Rendering su `requestAnimationFrame` solo quando necessario, preload prioritario e cache di bitmap limitata secondo il dispositivo.
-- Fotografie originali importate senza alterare i pixel; font e PDF locali. Nessuna ricostruzione Three.js o richiesta a servizi esterni. Inventario, ordine e lacune in [docs/photo-sequence.md](docs/photo-sequence.md).
+- Fotografie originali importate senza alterare i byte; nuovi asset in WebP lossless, con verifica dei pixel. Font e PDF locali, nessuna ricostruzione Three.js o richiesta a servizi esterni durante l’uso del sito. Gli intermedi generati sono approssimazioni visive: restano variazioni di luce, texture e prospettiva, documentate nella relazione.
 - DPR fino a 2 desktop/1,5 mobile, resize proporzionale, versione essenziale e preferenza di movimento ridotto con gli stessi frame. Il percorso funziona anche senza WebGL.
 - Configuratore semplificato: quattro input per ascensori, piani **escluso terra**, addetti complessivi e capacità in persone. Controlli +/− e media automatica per piano; orari e pause standard gestiti internamente.
 - Calcolo in Web Worker, annullamento, confronto di tre politiche, contatori di censura, CDF completa, apprendimento fuori campione, replay degli eventi e download CSV/JSON.
@@ -42,7 +42,7 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 
 | Cartella | Responsabilità |
 | --- | --- |
-| `src/journey` | Canvas fotografico, GSAP/ScrollTrigger, manifest, cache, riferimenti e fallback statico |
+| `src/journey` | Canvas fotografico, GSAP/ScrollTrigger, timeline ponderata, manifest, cache, riferimenti originali e fallback statico |
 | `src/configurator` | Form, risultati, grafico, replay ed esportazioni |
 | `src/simulation` | Domanda seeded, apprendimento, NNLS, fisica, eventi, instradamento e statistiche |
 | `src/algorithms` | Equazioni autentiche e spiegazione del modello |

@@ -1,6 +1,7 @@
 import { test, expect } from './browser.spec';
 import manifest from '../../src/journey/sequence/manifest.json' with { type: 'json' };
 import { writeFile } from 'node:fs/promises';
+import { frameAtProgress } from '../../src/journey/sequence/timeline';
 
 for (const [width, height] of [[1440, 900], [375, 812]]) {
   test(`measures 90 photographic scroll samples at ${width}px and stops redrawing when idle`, async ({ page }, info) => {
@@ -29,8 +30,10 @@ for (const [width, height] of [[1440, 900], [375, 812]]) {
     await info.attach('photographic-scroll-performance', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' });
     await writeFile(info.outputPath('photographic-scroll-performance.json'), JSON.stringify(evidence, null, 2));
     expect(evidence.samples).toBe(90); expect(Number.isFinite(evidence.frameP95Ms)).toBe(true);
+    const actualProgress = await page.locator('.journey').evaluate((el) =>
+      (scrollY - el.getBoundingClientRect().top - scrollY) / Math.round((el.clientHeight - innerHeight) * .83));
     await expect.poll(async () => Number(await page.locator('canvas').getAttribute('data-requested-frame')))
-      .toBeCloseTo(.15 / .83 * (manifest.frames.length - 1), 2);
+      .toBeCloseTo(frameAtProgress(actualProgress, manifest.frames.map((frame) => frame.at)), 2);
     await expect(page.locator('canvas')).toHaveAttribute('data-frame-ready', 'true');
     // Once scrub and decoding settle, redraw count must remain unchanged for 30 paints.
     await expect.poll(async () => page.locator('canvas').evaluate(async (canvas) => {

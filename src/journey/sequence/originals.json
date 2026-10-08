@@ -1,0 +1,86 @@
+[
+  {
+    "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_44_44-1.png",
+    "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_44_44-1.png",
+    "sha256": "afe57dbe30b624cc1e57ae1a525d8c1beb0cc3b506429f54664888a575a26bb7",
+    "phase": "exterior",
+    "id": "original-00"
+  },
+  {
+    "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_45-2.png",
+    "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_45-2.png",
+    "sha256": "14299a5f9cd1a2628097c418e14113c16e8f07f06ae8ddc388d55d30be0c7e3b",
+    "phase": "exterior",
+    "id": "original-01"
+  },
+  {
+    "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_50-1.png",
+    "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_50-1.png",
+    "sha256": "beca3fec6d62c31bd8d37127fad92d560f1440a5286f82350ce256fbb70c6cd8",
+    "phase": "exterior",
+    "id": "original-02"
+  },
+  {
+    "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_50-2.png",
+    "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_50-2.png",
+    "sha256": "2bcbe4aa0b054ee488f19fa8d2ad1b845f42772c2493d9bcc2593fa44a0fd6af",
+    "phase": "entrance",
+    "id": "original-03"
+  },
+  {
+    "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_51-3.png",
+    "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_51-3.png",
+    "sha256": "ae77817db6887adddeb2a4e3e5c176b5606d110365b820d9290eced8252b4869",
+    "phase": "entrance",
+    "id": "original-04"
+  },
+  {
+    "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_52-4.png",
+    "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_52-4.png",
+    "sha256": "945dbb1409956c952a372e9763457b42340f41a51b0757b9a60e4c8b3acd929f",
+    "phase": "entrance",
+    "id": "original-05"
+  },
+  {
+    "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_53-5.png",
+    "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_53-5.png",
+    "sha256": "ef6bce55c7c201985a196a3ec2618e022539bc1fb972396a690be12a2773996d",
+    "phase": "lobby",
+    "id": "original-06"
+  },
+  {
+    "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_46-3.png",
+    "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_46-3.png",
+    "sha256": "923adee3def2e9874f30a0002614cd2d551545c939e5ae3d4e59059f36b6f4f8",
+    "phase": "lobby",
+    "id": "original-07"
+  },
+  {
+    "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_48-4.png",
+    "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_48-4.png",
+    "sha256": "0b007e4cb374cdf62a9200c57b0e9e2ca129ce5951319561ccea4c314aff9507",
+    "phase": "turn",
+    "id": "original-08"
+  },
+  {
+    "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_50-5.png",
+    "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_50-5.png",
+    "sha256": "341de8bd3ab99a98a4c5fe28f73c8d376ce9517646ef0b1f63dca0fbb3f2c344",
+    "phase": "elevator",
+    "id": "original-09"
+  },
+  {
+    "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_51-6.png",
+    "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_51-6.png",
+    "sha256": "faf5a8a6204cb41e9e47bf490ed53e2a268064e1266c505be152cbb137ab2e11",
+    "phase": "elevator",
+    "id": "original-10"
+  },
+  {
+    "source": "Media ascensore/Atrio moderno con ascensore aperto.png",
+    "url": "/sequence/Media%20ascensore/Atrio%20moderno%20con%20ascensore%20aperto.png",
+    "sha256": "ede90b1124dff496883af0a132a15a7e90cce7a2aa31bcb3f73c1eaa77f59726",
+    "phase": "elevator",
+    "id": "original-11"
+  }
+]
