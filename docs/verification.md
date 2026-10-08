@@ -1,5 +1,21 @@
 # Verifica finale
 
+## Revisione visiva — ingresso diretto e ascensore interno
+
+L’ultima richiesta sostituisce il corridoio, la svolta e i quattro portali della scena con un unico ascensore nella lobby. La flotta del simulatore rimane configurabile, con quattro cabine standard. Geometrie e finiture seguono i materiali analizzati; provenienza e adattamento sono descritti in [visual-reference.md](visual-reference.md).
+
+- `npm test`: **81/81 test superati in 8 file**, incluse geometria, visibilità delle campate arretrate, camera libera, apertura reversibile, contenimento delle ante nei montanti e ciclo di vita del contesto WebGL.
+- `npm run build`: superato, verifica TypeScript inclusa. Nessuna dipendenza aggiunta.
+- Suite browser estesa su build di produzione, escluso il benchmark già fallito: **16 superati, 2 falliti**. I due fallimenti sono gli overflow preesistenti della pagina algoritmi a 320/375 px, non introdotti dalla revisione. Scena, configuratore e risultati non hanno overflow nelle prove effettuate.
+- Conferma sul codice finale: **16/16 test browser mirati superati** in circa 1,2 minuti, con `PLAYWRIGHT_PREVIEW=1 npx playwright test --grep-invert 'records frame timing|within (320|375)px' --workers=1`. Questa esecuzione esclude esplicitamente i tre controlli con limiti già documentati; le loro asserzioni restano nel repository e la suite completa non è dichiarata verde.
+- Percorso desktop/portrait, apertura e inversione dello scroll, ritorno dalla pagina algoritmi, riferimenti originali, movimento ridotto, assenza di WebGL, selezione della versione essenziale e perdita autentica di WebGL verificati. Il difetto di ritorno alla scena è corretto: il listener viene rimosso prima del teardown intenzionale di R3F.
+- Tutti i **6 flussi del configuratore con Worker reale** superati, compreso lo scenario standard; nessuna modifica a `src/simulation`, `src/configurator`, `src/algorithms`, PDF o lockfile.
+- Il benchmark di 90 frame sul renderer software Chromium/SwiftShader supera ancora il timeout di 60 s. Non è un test superato e non certifica la fluidità su dispositivi reali; il fallback statico rimane disponibile.
+- Revisione specialistica mirata: individuata esposizione delle ante fuori dai montanti a porta completamente aperta, corretta con test RED→GREEN; griglia spostata nella parte visibile dell’apertura. Nessun altro difetto importante segnalato.
+- Ispezionati gli screenshot di torre, ingresso, lobby, ascensore chiuso/aperto e versione portrait. Il fallback usa quattro catture dello stesso renderer, senza testo sovrapposto né animazioni, circa 240 KB complessivi.
+
+Le verifiche qui sopra aggiornano la situazione storica riportata sotto: il precedente difetto di ritorno al Canvas è risolto. Restano l’overflow della pagina tecnica su piccoli schermi e la verifica prestazionale su GPU reale. Nessun deployment pubblico.
+
 ## Configuratore semplificato — 8 ottobre 2026
 
 - `npm test`: 70 test superati in 6 file, inclusi 18 test dell'adattatore dei quattro input al modello originale.

@@ -195,7 +195,7 @@ select:focus-visible {
   border-color: #cfd5cb;
 }
 .journey {
-  height: 720svh;
+  height: 560svh;
   background: #101b22;
   position: relative;
 }
@@ -461,10 +461,23 @@ select:focus-visible {
   height: 100%;
   position: relative;
 }
-.journey-static .journey-viewport > svg {
+.journey-fallback {
+  position: absolute;
+  inset: 0;
+  background: #112638;
+}
+.journey-fallback img {
   width: 100%;
   height: 100%;
-  opacity: 0.8;
+  object-fit: cover;
+  object-position: 65% center;
+}
+.static-story article img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 8 / 5;
+  object-fit: cover;
+  margin-bottom: 16px;
 }
 .journey-static .hero-copy {
   color: #f8f2e4;
@@ -479,6 +492,47 @@ select:focus-visible {
   padding-top: 65px;
   padding-bottom: 65px;
   border-bottom: 1px solid var(--line);
+}
+.visual-reference-disclosure {
+  padding-top: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.visual-reference-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  list-style: none;
+}
+.visual-reference-disclosure > summary::-webkit-details-marker { display: none; }
+.visual-reference-disclosure[open] > summary svg { transform: rotate(45deg); }
+.visual-reference-content { padding-top: 22px; }
+.visual-reference-content > p {
+  max-width: 780px;
+  font-size: 12px;
+  color: #68716b;
+}
+.visual-reference-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.visual-reference-grid figure { margin: 0; min-width: 0; }
+.visual-reference-grid img {
+  display: block;
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  background: #e8e4dc;
+}
+.visual-reference-grid figcaption { padding: 13px 0 3px; }
+.visual-reference-grid figcaption strong { display: block; font-size: 12px; font-weight: 500; }
+.visual-reference-grid figcaption span { display: block; font-size: 9px; color: #70776f; margin-top: 5px; }
+@media (max-width: 767px) {
+  .visual-reference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
+  .visual-reference-grid img { height: 190px; }
+  .visual-reference-content > p { font-size: 11px; }
 }
 .static-story > div {
   display: grid;
@@ -2086,6 +2140,30 @@ select:focus-visible {
   }
   .math-overlay .eyebrow {
     font-size: 7px;
+  }
+  /* During the opening, keep the upper door leaves and display unobstructed.
+     The full mathematical card returns once the camera enters the cabin. */
+  .journey[data-phase='doors'] .math-overlay {
+    top: auto;
+    bottom: 12%;
+    max-height: 30%;
+    padding: 14px 18px;
+  }
+  .journey[data-phase='doors'] .math-overlay h2 {
+    font-size: 22px;
+  }
+  .journey[data-phase='doors'] .math-overlay .eyebrow {
+    margin-bottom: 8px;
+  }
+  .journey[data-phase='doors'] .math-step {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+  .journey[data-phase='doors'] .katex-display {
+    margin: 6px 0;
+  }
+  .journey[data-phase='doors'] .math-source {
+    margin-top: 8px;
   }
   .math-step .katex {
     font-size: 0.8em;

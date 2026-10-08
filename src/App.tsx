@@ -18,6 +18,7 @@ import Algorithms from './algorithms/Algorithms';
 import Formula from './components/Formula';
 import Icon from './components/Icon';
 import JourneyFallback from './journey/JourneyFallback';
+import VisualReferences from './journey/VisualReferences';
 import { journeyPose } from './journey/pose';
 const SceneCanvas = lazy(() => import('./components/SceneCanvas'));
 class SceneBoundary extends Component<
@@ -38,11 +39,10 @@ class SceneBoundary extends Component<
 const phaseCopy = [
   { from: 0, title: 'L’edificio', n: '01' },
   { from: 0.15, title: 'La soglia', n: '02' },
-  { from: 0.23, title: 'L’esplorazione', n: '03' },
-  { from: 0.43, title: 'Una nuova prospettiva', n: '04' },
-  { from: 0.54, title: 'Quattro ascensori', n: '05' },
-  { from: 0.72, title: 'La decisione', n: '06' },
-  { from: 0.83, title: 'Il modello', n: '07' },
+  { from: 0.23, title: 'La lobby', n: '03' },
+  { from: 0.43, title: 'L’ascensore', n: '04' },
+  { from: 0.72, title: 'L’apertura', n: '05' },
+  { from: 0.83, title: 'Il modello', n: '06' },
 ];
 export default function App() {
   const [route, setRoute] = useState(window.location.pathname),
@@ -199,7 +199,7 @@ export default function App() {
   const pose = journeyPose(progress, window.innerWidth / window.innerHeight);
   const showHero = fallback || progress < 0.16,
     heroOpacity = fallback ? 1 : Math.max(0, 1 - progress / 0.14);
-  const sceneLight = route !== '/' || fallback || progress > 0.91;
+  const sceneLight = route !== '/' || fallback || progress > 0.18;
   const handleLink = (e: React.MouseEvent<HTMLAnchorElement>, next: string) => {
     if (e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
       e.preventDefault();
@@ -324,11 +324,11 @@ export default function App() {
                   className="elevator-caption"
                   style={{ opacity: Math.min(1, (progress - 0.54) * 20, (0.72 - progress) * 20) }}
                 >
-                  <p className="eyebrow">04 CABINE / 01 SISTEMA</p>
+                  <p className="eyebrow">DENTRO IL PALAZZO</p>
                   <h2>
-                    Non più vicine.
+                    Una porta.
                     <br />
-                    <em>Più intelligenti.</em>
+                    <em>Nuove possibilità.</em>
                   </h2>
                 </div>
               )}
@@ -411,18 +411,28 @@ export default function App() {
               <div>
                 {[
                   '01 · L’ingresso',
-                  '02 · Il corridoio e la svolta a destra',
-                  '03 · Quattro ascensori',
+                  '02 · La lobby',
+                  '03 · L’ascensore all’interno',
                   '04 · L’apertura e il modello',
                 ].map((t, i) => (
                   <article key={t}>
+                    <img
+                      src={`/visual/scene-${['exterior', 'lobby', 'elevator-closed', 'elevator-open'][i]}.jpg`}
+                      alt={[
+                        'La torre e il suo ingresso illuminato',
+                        'La lobby con colonne chiare e lampade organiche',
+                        'L’ascensore inox interno con le ante chiuse',
+                        'Lo stesso ascensore con le ante aperte',
+                      ][i]}
+                      width="1440" height="900" loading="lazy" decoding="async"
+                    />
                     <span>{t}</span>
                     <p>
                       {
                         [
                           'Dalla facciata vetrata alla lobby in pietra chiara.',
-                          'Una geometria continua porta alla parete delle cabine.',
-                          'Un gruppo coordinato, non quattro decisioni isolate.',
+                          'Colonne chiare, luce calda e un ingresso diretto.',
+                          'L’ascensore inox passa da chiuso ad aperto.',
                           'Capacità, costo marginale e previsione: le equazioni autentiche.',
                         ][i]
                       }
@@ -436,6 +446,7 @@ export default function App() {
               />
             </section>
           )}
+          <VisualReferences />
           <section className="configuration-section page-width" id="simulazione">
             <div className="configuration-intro">
               <p className="eyebrow">

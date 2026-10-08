@@ -1,6 +1,6 @@
 # VERTICALE — mobilità verticale intelligente
 
-Esperienza architettonica 3D e simulatore di un gruppo di ascensori, realizzati a partire dai materiali forniti. Interfaccia italiana; percorso iniziale a quattro cabine, simulazione configurabile indipendentemente dalla scena.
+Esperienza architettonica 3D e simulatore di un gruppo di ascensori, realizzati a partire dai materiali forniti. Interfaccia italiana; ingresso diretto nella lobby e apertura di un ascensore interno, simulazione della flotta configurabile indipendentemente dalla scena.
 
 ## Avvio
 
@@ -30,7 +30,8 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 
 ## Esperienza
 
-- Scroll nativo continuo e reversibile: torre al tramonto, ingresso, corridoio, svolta destra, quattro ascensori, apertura della seconda cabina, equazioni e configuratore.
+- Scroll nativo continuo e reversibile: torre al tramonto, ingresso, lobby, avvicinamento all’ascensore interno, apertura delle ante, equazioni e configuratore.
+- Architettura vincolata ai riferimenti originali: campate arretrate e balconi, colonne avorio e sospensioni organiche, portale inox con display rosso e cabina a pannelli scuri. Fonti e adattamenti sono dichiarati in [docs/visual-reference.md](docs/visual-reference.md) e nel sito.
 - Rendering originale con React Three Fiber, geometrie condivise/istanziate, illuminazione e materiali generati localmente. Font e PDF serviti dal progetto; nessuna richiesta a servizi 3D esterni.
 - DPR limitato e qualità ridotta su mobile; caricamento differito del Canvas e arresto del rendering al termine del percorso. Versione essenziale, preferenza di movimento ridotto e fallback alla perdita/assenza di WebGL mantengono contenuti e simulatore utilizzabili.
 - Configuratore semplificato: quattro input per ascensori, piani **escluso terra**, addetti complessivi e capacità in persone. Controlli +/− e media automatica per piano; orari e pause standard gestiti internamente.
@@ -41,7 +42,7 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 
 | Cartella | Responsabilità |
 | --- | --- |
-| `src/journey` | Ambiente 3D, camera deterministica, animazioni e fallback SVG |
+| `src/journey` | Ambiente 3D, camera deterministica, animazioni, riferimenti e fallback statico |
 | `src/configurator` | Form, risultati, grafico, replay ed esportazioni |
 | `src/simulation` | Domanda seeded, apprendimento, NNLS, fisica, eventi, instradamento e statistiche |
 | `src/algorithms` | Equazioni autentiche e spiegazione del modello |

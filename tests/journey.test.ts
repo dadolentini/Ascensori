@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PerspectiveCamera, Vector3 } from 'three';
-import { ELEVATOR_CENTERS, journeyFov, journeyPose } from '../src/journey/pose';
+import { PORTAL_POSITION, journeyFov, journeyPose } from '../src/journey/pose';
 
 describe('the reversible architectural journey', () => {
   it('shows the complete original tower at the initial desktop and mobile frames', () => {
@@ -20,20 +20,21 @@ describe('the reversible architectural journey', () => {
           }
     }
   });
-  it('starts outside, traverses the entrance, and reaches the end of the corridor', () => {
+  it('starts outside and traverses the entrance directly into the lobby', () => {
     expect(journeyPose(0).cameraPosition[2]).toBeGreaterThan(40);
     expect(journeyPose(0.23).cameraPosition).toEqual([0, 1.65, -3]);
-    expect(journeyPose(0.43).cameraPosition).toEqual([0, 1.65, -17.5]);
+    expect(journeyPose(0.43).cameraPosition).toEqual([0, 1.65, -8.2]);
+    expect(journeyPose(0.4).phase).toBe('lobby');
   });
-  it('turns right through an arc instead of teleporting into the elevator hall', () => {
-    const middle = journeyPose(0.485);
-    expect(middle.cameraPosition[0]).toBeGreaterThan(0);
-    expect(middle.cameraPosition[0]).toBeLessThan(3);
-    expect(middle.cameraPosition[2]).toBeLessThan(-17.5);
-    expect(journeyPose(0.54).cameraPosition).toEqual([3, 1.65, -20.5]);
-    expect(journeyPose(0.54).target[0]).toBeGreaterThan(20);
+  it('keeps an axial route, with no long corridor or right turn', () => {
+    for (let i = 230; i <= 830; i++) {
+      const pose = journeyPose(i / 1000);
+      expect(pose.cameraPosition[0]).toBe(0);
+      expect(pose.target[0]).toBe(0);
+      expect(['corridor', 'turn']).not.toContain(pose.phase);
+    }
   });
-  it('frames four complete portals on a portrait viewport before approaching one', () => {
+  it('frames the complete single portal on a portrait viewport before approaching', () => {
     const aspect = 0.5;
     for (const progress of [0.54, 0.58, 0.62]) {
       const pose = journeyPose(progress, aspect);
@@ -41,9 +42,9 @@ describe('the reversible architectural journey', () => {
       camera.position.fromArray(pose.cameraPosition);
       camera.lookAt(new Vector3(...pose.target));
       camera.updateMatrixWorld();
-      for (const z of ELEVATOR_CENTERS) {
-        for (const offset of [-1, 1]) {
-          const corner = new Vector3(22, offset === -1 ? 0 : 3.2, z + offset).project(camera);
+      for (const x of [-1.2, 1.2]) {
+        for (const y of [0, 3.2]) {
+          const corner = new Vector3(x, y, PORTAL_POSITION[2]).project(camera);
           expect(Math.abs(corner.x)).toBeLessThan(0.94);
           expect(Math.abs(corner.y)).toBeLessThan(0.94);
           expect(corner.z).toBeLessThan(1);
@@ -51,16 +52,16 @@ describe('the reversible architectural journey', () => {
       }
     }
   });
-  it('advances the wide-screen reveal while preserving the portrait bank framing', () => {
-    expect(journeyPose(0.58, 1.78).cameraPosition[0]).toBeGreaterThan(10);
-    expect(journeyPose(0.58, 0.5).cameraPosition[0]).toBe(3);
+  it('shows the same in-building elevator on desktop and portrait', () => {
+    expect(journeyPose(0.58, 1.78).phase).toBe('elevator');
+    expect(journeyPose(0.58, 0.5).cameraPosition).toEqual(journeyPose(0.58, 1.78).cameraPosition);
   });
   it('opens two elevator panels before crossing their threshold', () => {
     expect(journeyPose(0.72).doorOpen).toBe(0);
     expect(journeyPose(0.755).doorOpen).toBeGreaterThan(0.3);
     expect(journeyPose(0.79).doorOpen).toBe(1);
-    expect(journeyPose(0.79).cameraPosition[0]).toBeLessThan(22);
-    expect(journeyPose(0.83).cameraPosition[0]).toBeGreaterThan(22);
+    expect(journeyPose(0.79).cameraPosition[2]).toBeGreaterThan(PORTAL_POSITION[2]);
+    expect(journeyPose(0.83).cameraPosition[2]).toBeLessThan(PORTAL_POSITION[2]);
   });
   it('keeps the selected door lintel and threshold in frame during its opening', () => {
     const pose = journeyPose(0.755, 1.78);
@@ -69,7 +70,7 @@ describe('the reversible architectural journey', () => {
     camera.lookAt(new Vector3(...pose.target));
     camera.updateMatrixWorld();
     for (const y of [0, 3.04])
-      expect(Math.abs(new Vector3(22, y, -21.7).project(camera).y)).toBeLessThan(0.94);
+      expect(Math.abs(new Vector3(0, y, PORTAL_POSITION[2]).project(camera).y)).toBeLessThan(0.94);
   });
   it('opens the entrance before reaching the glass and closes it on reverse', () => {
     expect(journeyPose(0.14).entranceOpen).toBeGreaterThan(0.95);

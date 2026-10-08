@@ -1,11 +1,11 @@
 export type Point3 = [number, number, number];
-export const ELEVATOR_CENTERS = [-24.1, -21.7, -19.3, -16.9] as const;
+/** Direct in-building portal placement approved by the user, not surveyed coordinates. */
+export const PORTAL_POSITION: Point3 = [0, 0, -16.5];
 export type JourneyPhase =
   | 'exterior'
   | 'entrance'
-  | 'corridor'
-  | 'turn'
-  | 'elevators'
+  | 'lobby'
+  | 'elevator'
   | 'approach'
   | 'doors'
   | 'cabin'
@@ -27,7 +27,7 @@ const segment = (p: number, a: number, b: number) => ease((p - a) / (b - a));
 const mix = (a: Point3, b: Point3, t: number): Point3 =>
   a.map((value, index) => value + (b[index] - value) * t) as Point3;
 
-/** Portrait framing keeps the complete bank visible. No camera history is used. */
+/** Portrait framing keeps the architectural entrance and single portal visible. */
 export function journeyFov(progress: number, aspect = 1.78): number {
   const portrait = Math.max(0, Math.min(1, (1.1 - Math.max(0.25, aspect)) / 0.6));
   return 52 + portrait * 18 + 4 * (1 - segment(clamp(progress), 0, 0.15));
@@ -35,7 +35,6 @@ export function journeyFov(progress: number, aspect = 1.78): number {
 
 export function journeyPose(progress: number, aspect = 1.78): JourneyPose {
   const p = clamp(progress);
-  const revealX = 3 + 11 * clamp((aspect - 0.5) / 1.28);
   let cameraPosition: Point3;
   let target: Point3;
   let phase: JourneyPhase;
@@ -49,42 +48,30 @@ export function journeyPose(progress: number, aspect = 1.78): JourneyPose {
     target = [0, 1.65, cameraPosition[2] - 12];
     phase = 'entrance';
   } else if (p <= 0.43) {
-    cameraPosition = mix([0, 1.65, -3], [0, 1.65, -17.5], segment(p, 0.23, 0.43));
-    target = [0, 1.65, cameraPosition[2] - 12];
-    phase = 'corridor';
+    const t = segment(p, 0.23, 0.43);
+    cameraPosition = mix([0, 1.65, -3], [0, 1.65, -8.2], t);
+    target = mix([0, 1.65, -15], [0, 1.65, PORTAL_POSITION[2]], t);
+    phase = 'lobby';
   } else if (p <= 0.54) {
-    const angle = (segment(p, 0.43, 0.54) * Math.PI) / 2;
-    cameraPosition = [3 - 3 * Math.cos(angle), 1.65, -17.5 - 3 * Math.sin(angle)];
-    const distance = 12 + segment(p, 0.43, 0.54) * 7;
-    target = [
-      cameraPosition[0] + Math.sin(angle) * distance,
-      1.65,
-      cameraPosition[2] - Math.cos(angle) * distance,
-    ];
-    // Exact endpoint is useful to callers seeking directly to the reveal.
-    if (p === 0.54) {
-      cameraPosition = [3, 1.65, -20.5];
-      target = [22, 1.65, -20.5];
-    }
-    phase = 'turn';
+    cameraPosition = mix([0, 1.65, -8.2], [0, 1.65, -10.2], segment(p, 0.43, 0.54));
+    target = [0, 1.65, PORTAL_POSITION[2]];
+    phase = 'elevator';
   } else if (p <= 0.62) {
-    cameraPosition = [3 + (revealX - 3) * segment(p, 0.54, 0.58), 1.65, -20.5];
-    target = [22, 1.65, -20.5];
-    phase = 'elevators';
+    cameraPosition = [0, 1.65, -10.2];
+    target = [0, 1.65, PORTAL_POSITION[2]];
+    phase = 'elevator';
   } else if (p <= 0.72) {
     const t = segment(p, 0.62, 0.72);
-    cameraPosition = mix([revealX, 1.65, -20.5], [18.3, 1.65, -21.7], t);
-    target = mix([22, 1.65, -20.5], [22, 1.65, -21.7], t);
+    cameraPosition = mix([0, 1.65, -10.2], [0, 1.65, -12.8], t);
+    target = [0, 1.65, PORTAL_POSITION[2]];
     phase = 'approach';
   } else if (p <= 0.79) {
-    cameraPosition = [18.3, 1.65, -21.7];
-    target = [22, 1.65, -21.7];
+    cameraPosition = [0, 1.65, -12.8];
+    target = [0, 1.65, PORTAL_POSITION[2]];
     phase = 'doors';
   } else {
-    cameraPosition = mix([18.3, 1.65, -21.7], [23.25, 1.65, -21.7], segment(p, 0.79, 0.83));
-    target = [25, 1.65, -21.7];
-    // Keep the same sightline length at the transition, eliminating a target jump.
-    target[0] = 22 + segment(p, 0.79, 0.83) * 3;
+    cameraPosition = mix([0, 1.65, -12.8], [0, 1.65, -17.75], segment(p, 0.79, 0.83));
+    target = mix([0, 1.65, PORTAL_POSITION[2]], [0, 1.65, -20], segment(p, 0.79, 0.83));
     phase = p <= 0.83 ? 'cabin' : p <= 0.92 ? 'equations' : 'configurator';
   }
   return {
