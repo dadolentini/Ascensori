@@ -1,6 +1,8 @@
 import { test, expect, screenshot, runSmallScenario, simulationSection } from './browser.spec';
 
-test('algorithms direct route explains all nineteen equations and serves the source PDF', async ({ page }, info) => {
+test('algorithms direct route explains all nineteen equations and serves the source PDF', async ({
+  page,
+}, info) => {
   await page.goto('/algoritmi');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('una decisione');
   await expect(page.locator('.equation-list > article')).toHaveCount(19);
@@ -16,20 +18,27 @@ test('algorithms direct route explains all nineteen equations and serves the sou
   await expect(page).toHaveURL('/');
 });
 
-test('reduced motion preserves a keyboard-operable static route and real simulation', async ({ page }, info) => {
+test('reduced motion preserves a keyboard-operable static route and real simulation', async ({
+  page,
+}, info) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Percorso senza animazioni' })).toBeVisible();
+  // The initial scroll restoration and font layout must finish before testing
+  // a keyboard jump; otherwise the test races the first React animation frame.
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Vai alla simulazione', exact: true })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('#simulazione')).toBeInViewport();
   await simulationSection(page);
-  await page.locator('summary').filter({ hasText: 'Orari e pause' }).focus();
+  await page.getByRole('button', { name: 'Aumenta ascensori', exact: true }).focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByLabel('Ingresso uffici', { exact: true })).toBeVisible();
-  await page.locator('summary').filter({ hasText: 'Parametri del modello' }).click();
+  await expect(page.getByLabel('Ascensori', { exact: true })).toHaveValue('5');
   for (const input of await page.locator('#simulazione input, #simulazione select').all()) {
     await expect(input).toHaveAccessibleName(/.+/);
   }
@@ -40,14 +49,17 @@ test('reduced motion preserves a keyboard-operable static route and real simulat
 
 test('missing WebGL leaves essential content and the Worker usable', async ({ page }) => {
   await page.addInitScript(() => {
-    Object.defineProperty(window, 'WebGL2RenderingContext', { value: undefined, configurable: true });
+    Object.defineProperty(window, 'WebGL2RenderingContext', {
+      value: undefined,
+      configurable: true,
+    });
   });
   await page.goto('/');
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Percorso senza animazioni' })).toBeVisible();
   await runSmallScenario(page, 2);
   await expect(page.locator('.metric-card')).toHaveCount(3);
-  await expect(page.getByRole('link', { name: /Gli algoritmi/ })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Navigazione principale' }).getByRole('link', { name: /Gli algoritmi/ })).toBeVisible();
 });
 
 test('essential mode changes rendering without losing form state', async ({ page }) => {
@@ -70,13 +82,20 @@ for (const width of [320, 375, 768, 1440]) {
     await page.goto('/');
     await simulationSection(page);
     await expect(page.getByRole('heading', { name: /OTTIMIZZIAMO.*IL SISTEMA/ })).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
-    await page.locator('summary').filter({ hasText: 'Orari e pause' }).click();
-    await expect(page.getByRole('combobox', { name: 'Gruppo / ufficio', exact: true })).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(
+      true,
+    );
+    await expect(page.getByLabel('Piani', { exact: true })).toHaveValue('15');
+    await expect(page.locator('.configuration-panel input')).toHaveCount(4);
+    await expect(page.locator('.configuration-panel select')).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(
+      true,
+    );
     if (width === 375) await screenshot(page, info, 'mobile-configurator');
     await page.getByRole('link', { name: /Gli algoritmi/ }).click();
     await page.locator('#equazione-16').scrollIntoViewIfNeeded();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(
+      true,
+    );
   });
 }

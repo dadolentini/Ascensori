@@ -33,7 +33,7 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 - Scroll nativo continuo e reversibile: torre al tramonto, ingresso, corridoio, svolta destra, quattro ascensori, apertura della seconda cabina, equazioni e configuratore.
 - Rendering originale con React Three Fiber, geometrie condivise/istanziate, illuminazione e materiali generati localmente. Font e PDF serviti dal progetto; nessuna richiesta a servizi 3D esterni.
 - DPR limitato e qualità ridotta su mobile; caricamento differito del Canvas e arresto del rendering al termine del percorso. Versione essenziale, preferenza di movimento ridotto e fallback alla perdita/assenza di WebGL mantengono contenuti e simulatore utilizzabili.
-- Configurazione di cabine, piani incluso terra, posti/kg, popolazione, orari, pause per piano/gruppo e parametri fisici. Validazione delle finestre e delle pause sovrapposte.
+- Configuratore semplificato: quattro input per ascensori, piani **escluso terra**, addetti complessivi e capacità in persone. Controlli +/− e media automatica per piano; orari e pause standard gestiti internamente.
 - Calcolo in Web Worker, annullamento, confronto di tre politiche, contatori di censura, CDF completa, apprendimento fuori campione, replay degli eventi e download CSV/JSON.
 - Pagina `/algoritmi` con tutte le 19 equazioni, unità, spiegazioni, esplorazioni di moto/capacità e collegamenti al PDF originale.
 
@@ -51,6 +51,8 @@ Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esporta
 La scena riceve soltanto il progresso normalizzato dello scroll. Non legge o modifica lo stato del motore. Il Worker riceve uno scenario serializzabile e restituisce risultati, scenario, seed e versione del modello.
 
 ## Metodo matematico
+
+Il configuratore converte i piani superiori in `totalFloors = piani + 1`, preservando il terra come piano 0. Gli addetti vengono distribuiti equamente, assegnando il resto ai primi piani. Le fasce pranzo 12/13/14 rispettano le quote originali 35%/43%/22% con arrotondamento al resto maggiore sul totale e ripartizione deterministica fra i piani; ciascun addetto appartiene a una sola componente. Il parametro medio dei pesi è fissato a 80 kg come richiesto per l'interfaccia semplificata, invece dei 76 kg del preset originale; dispersione e troncamento rimangono invariati, quindi i pesi simulati sono variabili. La portata standard resta 1.000 kg, distinta dal limite di persone: non viene ricavata moltiplicando la capacità per 80. `DEFAULT_SCENARIO`, equazioni e motore rimangono invariati.
 
 Fonte: `Ottimizzazione_4_Ascensori_15_Piani_V2_Uffici_Adattivi.pdf`, 15 pagine, conservato come `public/docs/modello-ascensori.pdf`. Il secondo PDF allegato contiene lo stesso testo. Il codice Python/JSON fornito è stato analizzato e riprodotto prima della trasposizione; non viene eseguito nel browser.
 

@@ -1,125 +1,15 @@
 import { useMemo, useState } from 'react';
 import type { ExperimentResult, PolicySummary } from '../simulation/results';
-import { POLICY_NAMES, requestMetrics } from '../simulation/results';
-import { mean } from '../simulation/statistics';
 import type { Policy } from '../simulation/routing';
 import { motionPosition } from '../simulation/physics';
 import { numberFormat, formatClock } from './helpers';
 import Icon from '../components/Icon';
 const COLORS = ['#9aa5a6', '#b59661', '#3c776e'];
-function dailyAverage(
-  policy: PolicySummary,
-  get: (day: PolicySummary['days'][number]) => number | null,
-) {
-  return mean(policy.days.map(get).filter((value): value is number => value !== null));
-}
-function GroupDiagnostics({ result }: { result: ExperimentResult }) {
-  const rows = useMemo(
-    () =>
-      result.scenario.groups.map((group) => ({
-        group,
-        cells: result.policies.map((policy) => {
-          const requests = policy.days.flatMap((day) =>
-            day.requests.filter((request) => request.groupId === group.id),
-          );
-          const metrics = requestMetrics(requests);
-          return {
-            metrics,
-            waiting: requests.filter((request) => request.state === 'waiting').length,
-            onboard: requests.filter((request) => request.state === 'onboard').length,
-          };
-        }),
-      })),
-    [result],
-  );
-  return (
-    <details className="learned-components">
-      <summary>Esamina attesa ed equità per gruppo ({rows.length} gruppi)</summary>
-      <p className="small-note">
-        Campioni aggregati sulle repliche: attesa media / massima in secondi sugli imbarcati; coda e
-        utenti a bordo alla fine. Nessuna garanzia di attesa massima.
-      </p>
-      <div className="result-table-wrap">
-        <table className="result-table">
-          <caption>
-            Diagnostica per gruppo e piano · media / massimo / campioni / coda / a bordo
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Gruppo / piano</th>
-              {result.policies.map((policy) => (
-                <th scope="col" key={policy.policy}>
-                  {POLICY_NAMES[policy.policy]}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(({ group, cells }) => (
-              <tr key={group.id}>
-                <th scope="row">
-                  {group.name} · P{group.floor}
-                </th>
-                {cells.map((cell, i) => (
-                  <td key={result.policies[i].policy}>
-                    {numberFormat(cell.metrics.wait.mean)} /{' '}
-                    {numberFormat(cell.metrics.maximumWait)} s<br />
-                    {cell.metrics.wait.count} campioni · {cell.waiting} in coda · {cell.onboard} a
-                    bordo
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </details>
-  );
-}
-function FitDiagnostics({ result }: { result: ExperimentResult }) {
-  const fit = result.diagnostics;
-  if (!fit) return null;
-  return (
-    <details className="learned-components">
-      <summary>Esamina il fit NNLS dei flussi aggregati</summary>
-      <p className="small-note">
-        Equazioni (3)–(4): intercetta β₀ e basi gaussiane ai centri dei bin di dieci minuti.{' '}
-        {fit.trainingDays} giorni training / {fit.holdoutDays} holdout. RMSE training{' '}
-        {numberFormat(fit.trainingRMSE, 4)}, holdout {numberFormat(fit.holdoutRMSE, 4)}{' '}
-        passeggeri/minuto. Questa diagnostica non decide il parcheggio.
-      </p>
-      <div className="result-table-wrap">
-        <table className="result-table">
-          <caption>Coefficienti non negativi · passeggeri/minuto</caption>
-          <thead>
-            <tr>
-              <th scope="col">Direzione</th>
-              <th scope="col">Componente</th>
-              <th scope="col">β</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(['up', 'down'] as const).flatMap((direction) =>
-              fit.components
-                .filter((component) => component.direction === direction)
-                .map((component, i) => (
-                  <tr key={`${direction}/${i}`}>
-                    <th scope="row">{direction === 'up' ? 'Salita' : 'Discesa'}</th>
-                    <td>
-                      {component.kind === 'intercept'
-                        ? 'Intercetta β₀'
-                        : `μ ${formatClock(component.mean)} · σ ${numberFormat(component.sigma / 60)} min`}
-                    </td>
-                    <td>{numberFormat(fit.coefficients[direction][i], 4)}</td>
-                  </tr>
-                )),
-            )}
-          </tbody>
-        </table>
-      </div>
-    </details>
-  );
-}
+const STRATEGY_NAMES: Record<Policy, string> = {
+  reactive: 'Senza anticipo',
+  bands: 'Orari standard',
+  adaptive: 'Previsione intelligente',
+};
 function exportData(result: ExperimentResult, csv: boolean) {
   let content: string;
   if (csv) {
@@ -161,60 +51,90 @@ function exportData(result: ExperimentResult, csv: boolean) {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-function CumulativeChart({ policies }: { policies: PolicySummary[] }) {
+function WaitDistribution({ policies }: { policies: PolicySummary[] }) {
+  const [seconds, setSeconds] = useState(30);
   const data = useMemo(
     () =>
-      policies.map((p) =>
-        p.days
-          .flatMap((d) =>
-            d.requests.filter((r) => r.pickup !== null).map((r) => r.pickup! - r.born),
+      policies.map((policy) =>
+        policy.days
+          .flatMap((day) =>
+            day.requests
+              .filter((request) => request.pickup !== null)
+              .map((request) => request.pickup! - request.born),
           )
           .sort((a, b) => a - b),
       ),
     [policies],
   );
-  const maximum = Math.max(1, ...data.map((a) => a.at(-1) ?? 0));
+  const maximum = Math.max(1, ...data.map((values) => Math.ceil(values.at(-1) ?? 0)));
+  const time = Math.min(seconds, maximum);
+  const boardedWithin = (values: number[], threshold: number) => {
+    let lo = 0,
+      hi = values.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (values[mid] <= threshold) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  };
+  if (data.every((values) => !values.length))
+    return (
+      <p className="empty-result">
+        Non ci sono attese da confrontare. Il grafico sarà disponibile quando ci saranno viaggi
+        effettuati.
+      </p>
+    );
   return (
-    <div className="chart-container">
+    <div className="chart-container simple-wait-chart">
       <svg
         viewBox="0 0 650 260"
         role="img"
-        aria-label="Distribuzione cumulata: percentuale degli utenti imbarcati entro ogni tempo di attesa"
+        aria-label="Percentuale di viaggi iniziati entro ogni tempo di attesa"
       >
         <text x="42" y="17" className="chart-label">
-          UTENTI IMBARCATI (%)
+          PERSONE SALITE (%)
         </text>
-        {[0, 25, 50, 75, 100].map((v) => (
-          <g key={v}>
-            <line x1="45" x2="625" y1={220 - v * 1.8} y2={220 - v * 1.8} className="chart-grid" />
-            <text x="34" y={224 - v * 1.8} textAnchor="end" className="chart-label">
-              {v}
+        {[0, 25, 50, 75, 100].map((value) => (
+          <g key={value}>
+            <line
+              x1="45"
+              x2="625"
+              y1={220 - value * 1.8}
+              y2={220 - value * 1.8}
+              className="chart-grid"
+            />
+            <text x="34" y={224 - value * 1.8} textAnchor="end" className="chart-label">
+              {value}
             </text>
           </g>
         ))}
-        {[0, 0.25, 0.5, 0.75, 1].map((v) => (
-          <text key={v} x={45 + v * 580} y="240" textAnchor="middle" className="chart-label">
-            {numberFormat(v * maximum, 0)} s
+        {[0, 0.25, 0.5, 0.75, 1].map((value) => (
+          <text
+            key={value}
+            x={45 + value * 580}
+            y="240"
+            textAnchor="middle"
+            className="chart-label"
+          >
+            {numberFormat(value * maximum, 0)} s
           </text>
         ))}
         {data.map((values, i) => {
           if (!values.length) return null;
-          const stride = Math.max(1, Math.floor(values.length / 300)),
-            points = values
-              .filter((_, j) => j % stride === 0 || j === values.length - 1)
-              .map((v) => {
-                let hi = values.length,
-                  lo = 0;
-                while (lo < hi) {
-                  const mid = (lo + hi) >> 1;
-                  if (values[mid] <= v) lo = mid + 1;
-                  else hi = mid;
-                }
-                return `${45 + (580 * v) / maximum},${220 - (180 * lo) / values.length}`;
-              });
+          const stride = Math.max(1, Math.floor(values.length / 300));
+          const points = values
+            .filter((_, j) => j % stride === 0 || j === values.length - 1)
+            .map(
+              (value) =>
+                45 +
+                (580 * value) / maximum +
+                ',' +
+                (220 - (180 * boardedWithin(values, value)) / values.length),
+            );
           return (
             <polyline
-              key={i}
+              key={policies[i].policy}
               points={points.join(' ')}
               fill="none"
               stroke={COLORS[i]}
@@ -222,19 +142,56 @@ function CumulativeChart({ policies }: { policies: PolicySummary[] }) {
             />
           );
         })}
+        <line
+          x1={45 + (580 * time) / maximum}
+          x2={45 + (580 * time) / maximum}
+          y1="32"
+          y2="220"
+          stroke="#53674c"
+          strokeDasharray="4 5"
+          opacity=".6"
+        />
       </svg>
       <div className="chart-legend">
-        {policies.map((p, i) => (
-          <span key={p.policy}>
+        {policies.map((policy, i) => (
+          <span key={policy.policy}>
             <i style={{ background: COLORS[i] }} />
-            {POLICY_NAMES[p.policy]}
+            {STRATEGY_NAMES[policy.policy]}
           </span>
         ))}
       </div>
+      <div className="wait-explorer">
+        <label htmlFor="wait-threshold">
+          Chi sale entro <strong>{numberFormat(time, 0)} secondi</strong>?
+        </label>
+        <input
+          id="wait-threshold"
+          type="range"
+          min="0"
+          max={maximum}
+          step="1"
+          value={time}
+          onChange={(event) => setSeconds(Number(event.target.value))}
+        />
+        <div className="wait-threshold-values" aria-live="polite">
+          {data.map((values, i) => (
+            <div key={policies[i].policy}>
+              <span>{STRATEGY_NAMES[policies[i].policy]}</span>
+              <strong>
+                {values.length
+                  ? numberFormat((100 * boardedWithin(values, time)) / values.length, 0) + '%'
+                  : '—'}
+              </strong>
+              <small>
+                {boardedWithin(values, time)} su {values.length} viaggi iniziati
+              </small>
+            </div>
+          ))}
+        </div>
+      </div>
       <p className="small-note">
-        CDF aggregata sulle repliche. La coda completa è visibile; campioni:{' '}
-        {policies.map((p) => `${POLICY_NAMES[p.policy]} ${p.waitSamples}`).join(' · ')}. I non
-        imbarcati sono esclusi dalla distribuzione, ma riportati nei contatori.
+        Una curva più vicina all’angolo in alto a sinistra indica attese più brevi. Il grafico
+        include chi è salito; gli eventuali viaggi non iniziati sono indicati qui sotto.
       </p>
     </div>
   );
@@ -256,11 +213,11 @@ function FleetReplay({ result }: { result: ExperimentResult }) {
     <div className="replay-panel">
       <div className="replay-header">
         <div>
-          <p className="eyebrow">LA TRACCIA REALE DEL MOTORE</p>
+          <p className="eyebrow">GLI ASCENSORI DURANTE LA GIORNATA</p>
           <h3>Un giorno, piano per piano.</h3>
         </div>
         <label className="sr-only" htmlFor="replay-policy">
-          Politica del replay
+          Strategia visualizzata
         </label>
         <select
           id="replay-policy"
@@ -269,7 +226,7 @@ function FleetReplay({ result }: { result: ExperimentResult }) {
         >
           {result.policies.map((p) => (
             <option key={p.policy} value={p.policy}>
-              {POLICY_NAMES[p.policy]}
+              {STRATEGY_NAMES[p.policy]}
             </option>
           ))}
         </select>
@@ -315,119 +272,128 @@ function FleetReplay({ result }: { result: ExperimentResult }) {
         </div>
       </label>
       <p className="small-note">
-        Replica 1 · seed {day.seed}. Posizioni interpolate dal profilo fisico; occupazione e
-        contatori dagli eventi. Il replay non modifica il calcolo. Il carico massimo è{' '}
-        {result.scenario.physics.capacityKg} kg / {result.scenario.physics.capacityPeople} persone.
+        Sposta il cursore per vedere dove si trovano le cabine e quante persone stanno viaggiando.
       </p>
     </div>
   );
 }
-export default function Results({ result, stale }: { result: ExperimentResult; stale: boolean }) {
-  const base = result.policies[0],
-    best = result.policies[2],
-    complete = result.policies.every((p) => p.completed === p.generated);
+export default function Results({
+  result,
+  stale,
+  onAlgorithms,
+}: {
+  result: ExperimentResult;
+  stale: boolean;
+  onAlgorithms: () => void;
+}) {
+  const base = result.policies.find((policy) => policy.policy === 'reactive')!;
+  const adaptive = result.policies.find((policy) => policy.policy === 'adaptive')!;
+  const complete = result.policies.every((policy) => policy.completed === policy.generated);
   const improvement =
-    base.meanWait !== null && base.meanWait > 0 && best.meanWait !== null
-      ? 100 * (1 - best.meanWait / base.meanWait)
+    base.meanWait !== null && base.meanWait > 0 && adaptive.meanWait !== null
+      ? 100 * (1 - adaptive.meanWait / base.meanWait)
       : null;
+  const hasRequests = result.policies.some((policy) => policy.generated > 0);
   return (
     <section
-      className="results-section page-width"
+      className="results-section page-width simple-results"
       id="results"
       tabIndex={-1}
       aria-label="Risultati della simulazione"
     >
       <div className="results-heading">
         <div>
-          <p className="eyebrow">IL RISULTATO DEL TUO ESPERIMENTO</p>
+          <p className="eyebrow">LA GIORNATA DEL TUO EDIFICIO</p>
           <h2>
-            Adesso, <em>i numeri.</em>
+            Quanto tempo <em>si aspetta?</em>
           </h2>
-        </div>
-        <div className="result-actions">
-          <button className="outline-button compact" onClick={() => exportData(result, true)}>
-            CSV <Icon name="download" size={17} />
-          </button>
-          <button className="outline-button compact" onClick={() => exportData(result, false)}>
-            Scenario + JSON <Icon name="download" size={17} />
-          </button>
         </div>
       </div>
       {stale && (
         <p className="result-warning" role="status">
-          La configurazione è cambiata. Questi risultati appartengono allo scenario precedente;
-          avvia una nuova simulazione per aggiornarli.
+          Hai cambiato i dati dell’edificio. Avvia una nuova simulazione per aggiornare questi
+          risultati.
         </p>
       )}
       {!complete && (
         <p className="result-warning">
-          Servizio incompleto: confrontare solo le medie può favorire chi serve meno richieste.
-          Esamina prima i contatori e la coda residua.
+          Alcuni viaggi non sono stati completati. Le attese qui sotto riguardano chi è salito:
+          confronta anche i viaggi rimasti in attesa.
         </p>
       )}
       <div className="result-meta">
-        <span>{result.scenario.elevatorCount} CABINE</span>
-        <span>{result.scenario.totalFloors} PIANI INCLUSO TERRA</span>
+        <span>{result.scenario.elevatorCount} ASCENSORI</span>
+        <span>{result.scenario.totalFloors - 1} PIANI + TERRA</span>
         <span>
-          {result.seeds.length} {result.seeds.length === 1 ? 'REPLICA' : 'REPLICHE'}
+          {result.scenario.groups.reduce((sum, group) => sum + group.employees, 0)} ADDETTI
         </span>
-        <span>SEED {result.seeds.join(' / ')}</span>
-        <span>{numberFormat(result.durationMs / 1000, 2)} s DI CALCOLO</span>
+        <span>UNA GIORNATA SIMULATA</span>
       </div>
       <div className="metric-cards">
-        {result.policies.map((p, i) => (
-          <article className={`metric-card ${i === 2 ? 'metric-featured' : ''}`} key={p.policy}>
+        {result.policies.map((policy, i) => (
+          <article
+            className={'metric-card ' + (policy.policy === 'adaptive' ? 'metric-featured' : '')}
+            key={policy.policy}
+          >
             <p className="eyebrow">
               <i style={{ background: COLORS[i] }} />
-              {POLICY_NAMES[p.policy]}
+              {STRATEGY_NAMES[policy.policy]}
             </p>
             <strong>
-              {numberFormat(p.meanWait)}
-              <small>s</small>
+              {numberFormat(policy.meanWait)}
+              {policy.meanWait !== null && <small>s</small>}
             </strong>
-            <p>Attesa media simulata</p>
+            <p>{policy.meanWait === null ? 'Attesa non disponibile' : 'Attesa media'}</p>
             <div>
-              <span>P95 giornaliero</span>
-              <b>{numberFormat(p.p95Wait)} s</b>
+              <span>Attese oltre 2 minuti</span>
+              <b>{policy.over120Pct === null ? '—' : numberFormat(policy.over120Pct) + '%'}</b>
             </div>
             <div>
-              <span>Attesa oltre 120 s</span>
-              <b>{numberFormat(p.over120Pct)}%</b>
+              <span>Viaggi completati</span>
+              <b>
+                {policy.completed} / {policy.generated}
+              </b>
             </div>
           </article>
         ))}
       </div>
       <div className="improvement-line">
-        <span>
-          {complete
-            ? 'Adattiva rispetto alla baseline'
-            : 'Differenza descrittiva sui soli imbarcati'}
-        </span>
+        <span>Previsione intelligente rispetto a senza anticipo</span>
         <strong>
-          {improvement === null
+          {improvement === null || !complete
             ? 'Non disponibile'
-            : `${improvement >= 0 ? '−' : '+'}${numberFormat(Math.abs(improvement))}% ${improvement >= 0 ? 'attesa' : 'attesa (peggioramento)'}`}
+            : (improvement >= 0 ? '−' : '+') + numberFormat(Math.abs(improvement)) + '% di attesa'}
         </strong>
         <p>
-          {result.ci
-            ? `${complete ? 'Riduzione appaiata' : 'Differenza appaiata sui soli imbarcati'} ${numberFormat(result.ci.mean)} s · IC esplorativo 95% [${numberFormat(result.ci.lower)}, ${numberFormat(result.ci.upper)}] s.`
-            : result.seeds.length === 1
-              ? 'Una replica: nessun intervallo di confidenza. Scegli otto repliche per il confronto statistico.'
-              : 'Intervallo di confidenza non disponibile: almeno una replica non ha campioni di attesa.'}
+          {!hasRequests
+            ? 'Non ci sono persone da trasportare con i dati inseriti.'
+            : !complete
+              ? 'Il confronto resta incompleto finché tutti i viaggi non sono conclusi.'
+              : improvement === null
+                ? 'Non ci sono abbastanza attese per calcolare una differenza.'
+                : improvement >= 0
+                  ? 'L’attesa media si riduce in questa giornata simulata.'
+                  : 'In questa giornata simulata, la previsione intelligente produce attese più lunghe.'}
         </p>
+      </div>
+      <p className="small-note">
+        Ogni strategia riceve gli stessi viaggi. Le attese sono calcolate su chi è salito, anche se
+        non ha ancora raggiunto il piano richiesto.
+      </p>
+      <div className="simple-result-chart">
+        <p className="eyebrow">VEDI COME CAMBIANO LE ATTESE</p>
+        <h3>Più in fretta, piano per piano.</h3>
+        <WaitDistribution policies={result.policies} />
       </div>
       <div className="result-table-wrap">
         <table className="result-table">
-          <caption>
-            Indicatori verificabili · medie giornaliere delle durate; contatori sommati sulle
-            repliche
-          </caption>
+          <caption>Tutti i viaggi della giornata</caption>
           <thead>
             <tr>
-              <th scope="col">Indicatore</th>
-              {result.policies.map((p) => (
-                <th scope="col" key={p.policy}>
-                  {POLICY_NAMES[p.policy]}
+              <th scope="col">Viaggi</th>
+              {result.policies.map((policy) => (
+                <th scope="col" key={policy.policy}>
+                  {STRATEGY_NAMES[policy.policy]}
                 </th>
               ))}
             </tr>
@@ -435,131 +401,64 @@ export default function Results({ result, stale }: { result: ExperimentResult; s
           <tbody>
             {(
               [
-                ['Richieste nell’orizzonte', (p: PolicySummary) => p.generated],
-                ['Completate', (p: PolicySummary) => p.completed],
-                ['In coda alla fine', (p: PolicySummary) => p.waiting],
-                ['A bordo alla fine', (p: PolicySummary) => p.onboard],
-                ['Fuori orizzonte (escluse)', (p: PolicySummary) => p.excluded],
-                ['Campioni attesa · imbarcati', (p: PolicySummary) => p.waitSamples],
-                ['Campioni viaggio · completati', (p: PolicySummary) => p.rideSamples],
-                [
-                  'Attesa mediana giornaliera · s',
-                  (p: PolicySummary) => dailyAverage(p, (d) => d.metrics.wait.median),
-                ],
-                [
-                  'Attesa massima aggregata · s',
-                  (p: PolicySummary) => {
-                    const values = p.days
-                      .map((d) => d.metrics.maximumWait)
-                      .filter((v): v is number => v !== null);
-                    return values.length ? Math.max(...values) : null;
-                  },
-                ],
-                [
-                  'Attesa media sui soli completati · s',
-                  (p: PolicySummary) =>
-                    dailyAverage(
-                      p,
-                      (d) => requestMetrics(d.requests.filter((r) => r.finish !== null)).wait.mean,
-                    ),
-                ],
-                ['Viaggio medio · s', (p: PolicySummary) => p.meanRide],
-                ['Tempo totale medio · s', (p: PolicySummary) => p.meanJourney],
-                ['Fermate con apertura · media/giorno', (p: PolicySummary) => p.doorStops],
-                ['Piani percorsi · media/giorno', (p: PolicySummary) => p.distanceFloors],
-                ['Piani di parcheggio · media/giorno', (p: PolicySummary) => p.parkingFloors],
-                ['Imbarchi respinti', (p: PolicySummary) => p.rejectedBoardings],
-              ] as [string, (p: PolicySummary) => number | null][]
+                ['Richiesti', (policy: PolicySummary) => policy.generated],
+                ['Completati', (policy: PolicySummary) => policy.completed],
+                ['Ancora in attesa', (policy: PolicySummary) => policy.waiting],
+                ['Persone ancora in cabina', (policy: PolicySummary) => policy.onboard],
+                ['Fuori dall’orario simulato', (policy: PolicySummary) => policy.excluded],
+              ] as [string, (policy: PolicySummary) => number][]
             ).map(([label, get]) => (
               <tr key={label}>
                 <th scope="row">{label}</th>
-                {result.policies.map((p) => (
-                  <td key={p.policy}>
-                    {numberFormat(
-                      get(p),
-                      label.endsWith('· s') || label.includes('media/') ? 1 : 0,
-                    )}
-                  </td>
+                {result.policies.map((policy) => (
+                  <td key={policy.policy}>{get(policy)}</td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <details className="simulation-extra">
+        <summary>
+          Guarda gli ascensori durante la giornata <Icon name="plus" size={17} />
+        </summary>
+        <FleetReplay key={result.completedAt} result={result} />
+      </details>
+      <details className="simulation-extra result-downloads">
+        <summary>
+          Scarica i risultati <Icon name="download" size={17} />
+        </summary>
+        <div className="result-actions">
+          <button
+            className="outline-button compact"
+            type="button"
+            onClick={() => exportData(result, true)}
+          >
+            Tabella CSV <Icon name="download" size={17} />
+          </button>
+          <button
+            className="outline-button compact"
+            type="button"
+            onClick={() => exportData(result, false)}
+          >
+            Dati completi JSON <Icon name="download" size={17} />
+          </button>
+        </div>
+      </details>
       <p className="small-note">
-        Attese sugli imbarcati; viaggio e totale sui completati. Percentili con interpolazione
-        lineare; P95 mostrato come media dei p95 giornalieri. Piani percorsi: segmenti conclusi;
-        residui dei segmenti in corso esportati separatamente. Nessun dato di energia dedotto.
-      </p>
-      <div className="result-visuals">
-        <div>
-          <p className="eyebrow">LA CODA, NON SOLO LA MEDIA</p>
-          <h3>Quanto tempo aspetta ciascuno?</h3>
-          <CumulativeChart policies={result.policies} />
-        </div>
-        <div>
-          <p className="eyebrow">L’APPRENDIMENTO, FUORI CAMPIONE</p>
-          <h3>Programma e abitudini.</h3>
-          <div className="learning-stat">
-            <span>MAE sulle giornate di validation</span>
-            <div>
-              <strong>
-                {numberFormat(result.learning.scheduledMAE, 4)}
-                <small>programma</small>
-              </strong>
-              <span>→</span>
-              <strong>
-                {numberFormat(result.learning.learnedMAE, 4)}
-                <small>appreso</small>
-              </strong>
-            </div>
-            <p>
-              {result.learning.trainDays} giorni training / {result.learning.holdoutDays} validation
-              · richieste per blocco di 5 min, per componente pausa, su tutte le 24 ore. Il
-              denominatore differisce dal grafico del PDF, limitato alla fascia pranzo.
-            </p>
-          </div>
-          <p className="small-note">
-            Apprendimento da storico sintetico, senza dati del futuro. La riduzione dell’errore del
-            forecast è distinta dal miglioramento dell’attesa.
-          </p>
-          <details className="learned-components">
-            <summary>
-              Esamina i parametri appresi ({result.learning.components.length} pause)
-            </summary>
-            <div className="result-table-wrap">
-              <table className="result-table">
-                <thead>
-                  <tr>
-                    <th>Gruppo / pausa</th>
-                    <th>Dichiarata</th>
-                    <th>Appresa</th>
-                    <th>Eventi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.learning.components.map((c) => (
-                    <tr key={`${c.groupId}/${c.breakId}`}>
-                      <th>
-                        {c.groupId} / {c.breakId}
-                      </th>
-                      <td>{formatClock(c.scheduled)}</td>
-                      <td>{formatClock(c.mean)}</td>
-                      <td>{c.observations}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </details>
-        </div>
-      </div>
-      <GroupDiagnostics result={result} />
-      <FitDiagnostics result={result} />
-      <FleetReplay result={result} />
-      <p className="result-provenance">
-        MOTORE {result.version} · DATI SINTETICI · GREEDY, NON OTTIMO GLOBALE · SCENARIO E TRACCE
-        ESPORTABILI
+        I risultati valgono per questa simulazione.{' '}
+        <a
+          href="/algoritmi"
+          onClick={(event) => {
+            if (event.button === 0 && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
+              event.preventDefault();
+              onAlgorithms();
+            }
+          }}
+        >
+          Gli algoritmi
+        </a>{' '}
+        spiega il metodo e i suoi limiti.
       </p>
     </section>
   );

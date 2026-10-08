@@ -8,10 +8,11 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { DEFAULT_SCENARIO, validateScenario } from './simulation/scenario';
+import { validateScenario } from './simulation/scenario';
 import type { Scenario } from './simulation/types';
 import type { ExperimentResult } from './simulation/results';
 import Configurator from './configurator/Configurator';
+import { createSimpleScenario, DEFAULT_SIMPLE_CONFIGURATION } from './configurator/helpers';
 import Results from './configurator/Results';
 import Algorithms from './algorithms/Algorithms';
 import Formula from './components/Formula';
@@ -51,7 +52,9 @@ export default function App() {
   const [reduced, setReduced] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
-  const [scenario, setScenario] = useState<Scenario>(() => structuredClone(DEFAULT_SCENARIO));
+  const [scenario, setScenario] = useState<Scenario>(() =>
+    createSimpleScenario(DEFAULT_SIMPLE_CONFIGURATION),
+  );
   const [result, setResult] = useState<ExperimentResult | null>(null),
     [running, setRunning] = useState(false),
     [fraction, setFraction] = useState(0),
@@ -449,30 +452,29 @@ export default function App() {
                 da una decisione migliore.
               </p>
               <p>
-                Configura i flussi del tuo edificio. Il modello confronta tre strategie sulle stesse
-                richieste, rispettando portata, occupazione e tempi fisici delle cabine.
+                Indica quanti piani, persone e ascensori ci sono nel tuo edificio. Confrontiamo tre
+                modi di gestire la giornata per capire quanto si aspetta.
               </p>
               <div className="intro-features">
                 <div>
                   <span>01</span>
-                  <p>Definisci edificio e abitudini</p>
+                  <p>Inserisci i dati dell’edificio</p>
                 </div>
                 <div>
                   <span>02</span>
-                  <p>Simula una giornata riproducibile</p>
+                  <p>Avvia la simulazione</p>
                 </div>
                 <div>
                   <span>03</span>
-                  <p>Confronta risultati, non promesse</p>
+                  <p>Confronta i tempi di attesa</p>
                 </div>
               </div>
               <div className="model-note">
                 <span className="model-note-mark">i</span>
                 <p>
                   <strong>Un modello, non una misura.</strong>
-                  <br />
-                  Traffico sintetico e algoritmi documentati. Ogni risultato vale per lo scenario
-                  scelto e per la baseline dello studio.
+                  <br />I risultati sono calcolati sui dati che inserisci. Le abitudini sono
+                  simulate: le prestazioni del tuo edificio possono essere diverse.
                 </p>
               </div>
               <a
@@ -501,6 +503,7 @@ export default function App() {
             <Results
               result={result}
               stale={JSON.stringify(result.scenario) !== JSON.stringify(scenario)}
+              onAlgorithms={() => navigate('/algoritmi')}
             />
           )}
           <section className="closing-section page-width">
