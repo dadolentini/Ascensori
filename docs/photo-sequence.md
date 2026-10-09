@@ -1,5 +1,7 @@
 # Sequenza fotografica — 8 ottobre 2026
 
+> Documento storico della prima integrazione a 18 frame. La sequenza attuale usa 10 derivati ottimizzati, precaricamento completo e tre capitoli: vedere [cinematic-revision.md](cinematic-revision.md) e [verification.md](verification.md) per implementazione e verifiche aggiornate. Gli inventari originali qui sotto restano conservati.
+
 ## Stato della consegna
 
 Il motore Canvas 2D è implementato e il percorso attivo comprende 18 frame: 10 originali, 2 ritagli selezionati dai nuovi allegati, 4 intermedi generati e 2 correzioni mirate. L’apertura attraversa gli stati chiuso, circa 29%, circa 70% e aperto. Tutti i 12 PNG originali rimangono intatti; due derivati corretti sostituiscono soltanto le rispettive viste nella timeline attiva. Inventario e motivazioni aggiornati in [sequence-integration.md](sequence-integration.md).

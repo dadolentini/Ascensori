@@ -2,6 +2,9 @@ import { defineConfig } from '@playwright/test';
 import { existsSync } from 'node:fs';
 
 const preview = process.env.PLAYWRIGHT_PREVIEW === '1';
+// The photographic app needs Canvas 2D. In the GPU-less cloud, native CPU
+// raster avoids emulating a 3D GPU; keep that backend available for diagnostics.
+const swiftshader = process.env.PLAYWRIGHT_SWIFTSHADER === '1';
 const port = preview ? 4173 : 5173;
 const baseURL = `http://127.0.0.1:${port}`;
 
@@ -24,7 +27,9 @@ export default defineConfig({
     launchOptions: {
       executablePath: existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined,
       headless: true,
-      args: ['--no-sandbox', '--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--renderer-process-limit=2', '--num-raster-threads=2'],
+      args: ['--no-sandbox', ...(swiftshader
+        ? ['--enable-unsafe-swiftshader', '--use-angle=swiftshader'] : ['--disable-gpu']),
+        '--renderer-process-limit=2', '--num-raster-threads=2'],
     },
   },
   webServer: {

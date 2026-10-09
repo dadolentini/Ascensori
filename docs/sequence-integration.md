@@ -1,5 +1,7 @@
 # Integrazione della sequenza — 8 ottobre 2026
 
+> Inventario storico della selezione a 18 frame. La revisione successiva seleziona 10 viste e conserva tutti gli asset precedenti; stato attuale, motivazioni e nuovi allegati sono descritti in [cinematic-revision.md](cinematic-revision.md).
+
 ## Materiali e selezione
 
 Sono stati estratti e analizzati tutti i 21 PNG dei nuovi allegati: 10 in `Cartella2.zip`, 11 in `cartella 3.zip`. Tutti sono RGB, 1122 × 1402 px. Le voci `__MACOSX` e `.DS_Store` sono metadati. Inventario con hash, corrispondenza visiva agli originali e decisioni in [visual-audit/sequence-selection.json](visual-audit/sequence-selection.json).

@@ -1,267 +1,202 @@
 {
-  "version": 2,
+  "version": 3,
   "complete": true,
   "missing": [
     "Ripresa continua e camera calibrata: i raccordi generati sono approssimazioni visive"
   ],
-  "width": 1122,
-  "height": 1402,
+  "width": 896,
+  "height": 1120,
   "frames": [
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_44_44-1.png",
-      "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_44_44-1.png",
-      "sha256": "afe57dbe30b624cc1e57ae1a525d8c1beb0cc3b506429f54664888a575a26bb7",
+      "url": "/sequence/optimized/original-00.webp",
+      "sha256": "a024a19feb93d97802aeda53eebf7fd7a9331bc2276e96c6173ac78ec60d82e7",
       "phase": "exterior",
       "id": "original-00",
       "at": 0,
-      "kind": "original",
+      "kind": "optimized-original",
       "references": [
         "original-00"
-      ]
+      ],
+      "sourceSha256": "afe57dbe30b624cc1e57ae1a525d8c1beb0cc3b506429f54664888a575a26bb7",
+      "derivativeOfSha256": "afe57dbe30b624cc1e57ae1a525d8c1beb0cc3b506429f54664888a575a26bb7",
+      "pixelsSha256": "0350f28c3c71c70e689dd35ce4c506175a924b40713c284ea34305a124b192a5",
+      "sourceBytes": 2528934,
+      "bytes": 249432,
+      "lossless": false,
+      "optimized": true,
+      "scene": "exterior"
     },
     {
       "id": "generated-tower-approach",
       "source": "Generato/generated-tower-approach.png",
-      "url": "/sequence/generated/generated-tower-approach.webp",
+      "url": "/sequence/optimized/generated-tower-approach.webp",
       "kind": "generated",
-      "at": 0.028,
+      "at": 0.1,
       "phase": "exterior",
       "references": [
         "original-00",
         "original-01"
       ],
-      "sha256": "b3d3a4962086be79d0e0beb29b24dbf6fadbdcd588bba0a5183337d265a2b76c",
+      "sha256": "e701007708244502187c87cd72da06679bcf8e613fb6daab104338c922f92295",
       "sourceSha256": "4849f027bb735afb4bac209cf50850148fe2f6156273afc064e72e91013fc952",
-      "pixelsSha256": "135abe6e193457b1f649b7f83307b1a97b5660fbc3a81df304baf734155abeac",
+      "pixelsSha256": "1feb5fa213d1f23757d0d88ea4548ba96ca4be2f40b61642fc098de8f3805c4b",
       "sourceBytes": 2858294,
-      "bytes": 2275380,
-      "lossless": true
+      "bytes": 333204,
+      "lossless": false,
+      "derivativeOfSha256": "b3d3a4962086be79d0e0beb29b24dbf6fadbdcd588bba0a5183337d265a2b76c",
+      "optimized": true,
+      "scene": "exterior"
     },
     {
       "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_45-2.png",
-      "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_45-2.png",
-      "sha256": "14299a5f9cd1a2628097c418e14113c16e8f07f06ae8ddc388d55d30be0c7e3b",
+      "url": "/sequence/optimized/original-01.webp",
+      "sha256": "2d05983a6f2f7a84ad40b8fa97c17b2cc0134ec01f588fe444a6679e54d035a9",
       "phase": "exterior",
       "id": "original-01",
-      "at": 0.07,
-      "kind": "original",
+      "at": 0.25,
+      "kind": "optimized-original",
       "references": [
         "original-01"
-      ]
-    },
-    {
-      "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_50-1.png",
-      "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_50-1.png",
-      "sha256": "beca3fec6d62c31bd8d37127fad92d560f1440a5286f82350ce256fbb70c6cd8",
-      "phase": "exterior",
-      "id": "original-02",
-      "at": 0.16,
-      "kind": "original",
-      "references": [
-        "original-02"
-      ]
-    },
-    {
-      "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_50-2.png",
-      "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_50-2.png",
-      "sha256": "2bcbe4aa0b054ee488f19fa8d2ad1b845f42772c2493d9bcc2593fa44a0fd6af",
-      "phase": "entrance",
-      "id": "original-03",
-      "at": 0.25,
-      "kind": "original",
-      "references": [
-        "original-03"
-      ]
+      ],
+      "sourceSha256": "14299a5f9cd1a2628097c418e14113c16e8f07f06ae8ddc388d55d30be0c7e3b",
+      "derivativeOfSha256": "14299a5f9cd1a2628097c418e14113c16e8f07f06ae8ddc388d55d30be0c7e3b",
+      "pixelsSha256": "106714929a8a9d831edbc28115f989df93ad4a7a7dadcbab34f349e24ae66781",
+      "sourceBytes": 2648420,
+      "bytes": 288660,
+      "lossless": false,
+      "optimized": true,
+      "scene": "exterior"
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_51-3.png",
-      "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_51-3.png",
-      "sha256": "ae77817db6887adddeb2a4e3e5c176b5606d110365b820d9290eced8252b4869",
+      "url": "/sequence/optimized/original-04.webp",
+      "sha256": "11d8d6f543a4d2ab59c204294d8d69d0636059a87f09eae56504d5ac54f382a0",
       "phase": "entrance",
       "id": "original-04",
-      "at": 0.34,
-      "kind": "original",
+      "at": 0.38,
+      "kind": "optimized-original",
       "references": [
         "original-04"
-      ]
+      ],
+      "sourceSha256": "ae77817db6887adddeb2a4e3e5c176b5606d110365b820d9290eced8252b4869",
+      "derivativeOfSha256": "ae77817db6887adddeb2a4e3e5c176b5606d110365b820d9290eced8252b4869",
+      "pixelsSha256": "df47eea8c9ee9b0a6a057ffd1110a55e088ca8e15077fc48f93bac0846ea3232",
+      "sourceBytes": 2034725,
+      "bytes": 137558,
+      "lossless": false,
+      "optimized": true,
+      "scene": "hall"
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_52-4.png",
-      "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_52-4.png",
-      "sha256": "945dbb1409956c952a372e9763457b42340f41a51b0757b9a60e4c8b3acd929f",
+      "url": "/sequence/optimized/original-05.webp",
+      "sha256": "9c1839afa4565e997bfd42bfb90c35ee766aec4ebd33bd424164161ec6cba74d",
       "phase": "entrance",
       "id": "original-05",
-      "at": 0.43,
-      "kind": "original",
+      "at": 0.47,
+      "kind": "optimized-original",
       "references": [
         "original-05"
-      ]
+      ],
+      "sourceSha256": "945dbb1409956c952a372e9763457b42340f41a51b0757b9a60e4c8b3acd929f",
+      "derivativeOfSha256": "945dbb1409956c952a372e9763457b42340f41a51b0757b9a60e4c8b3acd929f",
+      "pixelsSha256": "129fb3f57e524877f3e64ca34c8cf483b655ac2d833bbe3452ac928a719a0f1d",
+      "sourceBytes": 1875851,
+      "bytes": 97812,
+      "lossless": false,
+      "optimized": true,
+      "scene": "hall"
     },
     {
       "source": "media palazzo/Immagine ChatGPT 8 ott 2026, 17_38_53-5.png",
-      "url": "/sequence/media%20palazzo/Immagine%20ChatGPT%208%20ott%202026,%2017_38_53-5.png",
-      "sha256": "ef6bce55c7c201985a196a3ec2618e022539bc1fb972396a690be12a2773996d",
+      "url": "/sequence/optimized/original-06.webp",
+      "sha256": "8c09631142c6d4f3b09f42ecb631aec2b695d6412bbc6470f2547da52a61428b",
       "phase": "lobby",
       "id": "original-06",
-      "at": 0.52,
-      "kind": "original",
+      "at": 0.57,
+      "kind": "optimized-original",
       "references": [
         "original-06"
-      ]
-    },
-    {
-      "id": "corrected-lobby-turn",
-      "source": "Generato/corrected-lobby-turn.png",
-      "url": "/sequence/generated/corrected-lobby-turn.webp",
-      "kind": "corrected",
-      "at": 0.6,
-      "phase": "lobby",
-      "references": [
-        "original-06",
-        "original-07",
-        "original-08"
       ],
-      "replaces": "original-07",
-      "sha256": "e48524494b5b968f9e9e087cb33b1262c60be6256c8d96851621abc95ba1e1b1",
-      "sourceSha256": "3a5404b5af34ff92c1fb073312919dbfb014fffa6b8c7fb60b84075bd43eb539",
-      "pixelsSha256": "c56d80267fa6319c212fe58d8bd7292b66636adfd88e3cd81bd563317b31154e",
-      "sourceBytes": 1978316,
-      "bytes": 1458736,
-      "lossless": true
-    },
-    {
-      "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_48-4.png",
-      "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_48-4.png",
-      "sha256": "0b007e4cb374cdf62a9200c57b0e9e2ca129ce5951319561ccea4c314aff9507",
-      "phase": "turn",
-      "id": "original-08",
-      "at": 0.7,
-      "kind": "original",
-      "references": [
-        "original-08"
-      ]
-    },
-    {
-      "id": "supplied-extra-030",
-      "source": "Cartella2/extra_030_orig08_to_orig09.png",
-      "url": "/sequence/supplied/supplied-extra-030.webp",
-      "kind": "supplied-crop",
-      "at": 0.7333,
-      "phase": "turn",
-      "references": [
-        "original-08",
-        "original-09"
-      ],
-      "sha256": "53951561e452cba98a739438dd19fa5953dc7f1fb79214128119a9e454554522",
-      "sourceSha256": "d58b4e15f66fe40a6b25b57f7bd9b9b33db9beb82b89d4bc1a226acd59de04e7",
-      "pixelsSha256": "6075efb11dc6ccf6241c9b827931914e5e4be97654e224ffc78444ad4163ab3a",
-      "sourceBytes": 2083732,
-      "bytes": 1452056,
-      "lossless": true
-    },
-    {
-      "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_50-5.png",
-      "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_50-5.png",
-      "sha256": "341de8bd3ab99a98a4c5fe28f73c8d376ce9517646ef0b1f63dca0fbb3f2c344",
-      "phase": "elevator",
-      "id": "original-09",
-      "at": 0.79,
-      "kind": "original",
-      "references": [
-        "original-09"
-      ]
-    },
-    {
-      "id": "supplied-extra-033",
-      "source": "Cartella2/extra_033_orig09_to_orig10.png",
-      "url": "/sequence/supplied/supplied-extra-033.webp",
-      "kind": "supplied-crop",
-      "at": 0.8233,
-      "phase": "elevator",
-      "references": [
-        "original-09",
-        "original-10"
-      ],
-      "sha256": "44f4ab7716db6d8eb95faa1ae60f9c4b932d57e5f9b93d93fcc96359109d4a46",
-      "sourceSha256": "c6c92e019739e9e5c4207481d6c605092e7afa038c01c91ccbb3b9ff192438b7",
-      "pixelsSha256": "995bc39c9081097b8e093a23fbee94c3eb234d931661a27a531eec9a29bc7999",
-      "sourceBytes": 1881924,
-      "bytes": 1311800,
-      "lossless": true
-    },
-    {
-      "id": "generated-elevator-alignment",
-      "source": "Generato/generated-elevator-alignment.png",
-      "url": "/sequence/generated/generated-elevator-alignment.webp",
-      "kind": "generated",
-      "at": 0.842,
-      "phase": "elevator",
-      "references": [
-        "original-09",
-        "original-10"
-      ],
-      "sha256": "9a0ef0dc6f70820ac278e19c31bfad2082067f154158a3537fdc02b33017cb0a",
-      "sourceSha256": "9e15be8677c883b6fcfe17da673e27ce26bbf38ed755af2ea884ef3df6cc064b",
-      "pixelsSha256": "0ab2955c084465b8f29be9f6ab4ddb9746415cbaa58e5efe51edd26245387f21",
-      "sourceBytes": 1765431,
-      "bytes": 1236956,
-      "lossless": true
+      "sourceSha256": "ef6bce55c7c201985a196a3ec2618e022539bc1fb972396a690be12a2773996d",
+      "derivativeOfSha256": "ef6bce55c7c201985a196a3ec2618e022539bc1fb972396a690be12a2773996d",
+      "pixelsSha256": "ffb883b1bd0fb85f24807496fdec49a4437432a4298243b25e0ee280f8ea2ff4",
+      "sourceBytes": 1881528,
+      "bytes": 96008,
+      "lossless": false,
+      "optimized": true,
+      "scene": "hall"
     },
     {
       "source": "Media ascensore/Immagine ChatGPT 8 ott 2026, 17_44_51-6.png",
-      "url": "/sequence/Media%20ascensore/Immagine%20ChatGPT%208%20ott%202026,%2017_44_51-6.png",
-      "sha256": "faf5a8a6204cb41e9e47bf490ed53e2a268064e1266c505be152cbb137ab2e11",
+      "url": "/sequence/optimized/original-10.webp",
+      "sha256": "cbaad0b640f249ed42b094a7ebdd73f9acef72d01fdf0a6ee207a559157802e2",
       "phase": "elevator",
       "id": "original-10",
-      "at": 0.87,
-      "kind": "original",
+      "at": 0.72,
+      "kind": "optimized-original",
       "references": [
         "original-10"
       ],
-      "aperture": 0
+      "aperture": 0,
+      "sourceSha256": "faf5a8a6204cb41e9e47bf490ed53e2a268064e1266c505be152cbb137ab2e11",
+      "derivativeOfSha256": "faf5a8a6204cb41e9e47bf490ed53e2a268064e1266c505be152cbb137ab2e11",
+      "pixelsSha256": "f672d2fbfb93addb388f61aa4003a1dd5b133d03440ac3e2ba5ab9a91ed8ebd5",
+      "sourceBytes": 1730058,
+      "bytes": 51658,
+      "lossless": false,
+      "optimized": true,
+      "scene": "elevator"
     },
     {
       "id": "generated-doors-partial",
       "source": "Generato/generated-doors-partial.png",
-      "url": "/sequence/generated/generated-doors-partial.webp",
+      "url": "/sequence/optimized/generated-doors-partial.webp",
       "kind": "generated",
-      "at": 0.909,
+      "at": 0.8,
       "phase": "elevator",
       "references": [
         "original-10",
         "original-11"
       ],
-      "sha256": "5ec3e69d270718c6c29d62ed9920d990231123ca1c227728c7ee32a4b8d16bc1",
+      "sha256": "f7980c13f775379911505ae782a8237c1adbd427d99b79a87e6d0e6739cbcb1e",
       "sourceSha256": "a9897823dcf4d3be1abd4bab6ded43ee227f80facdf246f7273ab0c3f4b2fea3",
-      "pixelsSha256": "61d78e5ecf2588973ac00af6b206cde856b87bac00fc26292e4f5d72b8a03b9f",
+      "pixelsSha256": "84305b52eef82d2ee97756f0e0081b877f0228ed37c6afb1c0d1796ec64c2baf",
       "sourceBytes": 1662277,
-      "bytes": 1146664,
-      "lossless": true,
-      "aperture": 0.29
+      "bytes": 55880,
+      "lossless": false,
+      "aperture": 0.29,
+      "derivativeOfSha256": "5ec3e69d270718c6c29d62ed9920d990231123ca1c227728c7ee32a4b8d16bc1",
+      "optimized": true,
+      "scene": "elevator"
     },
     {
       "id": "generated-doors-wide",
       "source": "Generato/generated-doors-wide.png",
-      "url": "/sequence/generated/generated-doors-wide.webp",
+      "url": "/sequence/optimized/generated-doors-wide.webp",
       "kind": "generated",
-      "at": 0.961,
+      "at": 0.9,
       "phase": "elevator",
       "references": [
         "original-10",
         "original-11"
       ],
-      "sha256": "c5f077e7c4f6234e88f1d1fb4c2f63b506edbdbaf506f136ac1c8d6d750cf9dc",
+      "sha256": "ee9e7b8af4cabe111b19ab12848c43d6c54d6240f1511d9fdd071132fa830f0d",
       "sourceSha256": "17c9fb13f48f57d1af8c9f75343397c41d906ad0c4c65d3eb7ff615c4be8369b",
-      "pixelsSha256": "7eab7c391565c58bb2daf5d808147d56a5c3edff869bf087908f47d337c7e3e6",
+      "pixelsSha256": "2d1c2b51b4dcd56ddda97a5ec6c174c4b0191ac79d884622b85279e12dd78333",
       "sourceBytes": 1635650,
-      "bytes": 1138318,
-      "lossless": true,
-      "aperture": 0.7
+      "bytes": 59558,
+      "lossless": false,
+      "aperture": 0.7,
+      "derivativeOfSha256": "c5f077e7c4f6234e88f1d1fb4c2f63b506edbdbaf506f136ac1c8d6d750cf9dc",
+      "optimized": true,
+      "scene": "elevator"
     },
     {
       "id": "corrected-elevator-open",
       "source": "Generato/corrected-elevator-open.png",
-      "url": "/sequence/generated/corrected-elevator-open.webp",
+      "url": "/sequence/optimized/corrected-elevator-open.webp",
       "kind": "corrected",
       "at": 1,
       "phase": "elevator",
@@ -269,14 +204,48 @@
         "original-10",
         "original-11"
       ],
-      "sha256": "d2b8787d1a0f25fdbef72904ccd195f99325aca147a21ec43a6404a91ad0d3a8",
+      "sha256": "bf2eb6f49fbe5e4ca410de557ca38f701e40cfff10fec4b05aa11d6816756928",
       "sourceSha256": "6f3d485ae8e15a41dd1ee179f9306dc1d3e3568a95985a842203572c3cbe8c0b",
-      "pixelsSha256": "38672c99e1464cfa0c046707261b104e257c33d8f770cba8cd8a87673f22fe36",
+      "pixelsSha256": "144215a8a473d433684a414cef921d27bc4761d0149f8d2d18291b33b9311a00",
       "sourceBytes": 1676647,
-      "bytes": 1164956,
-      "lossless": true,
+      "bytes": 61886,
+      "lossless": false,
       "aperture": 1,
-      "replaces": "original-11"
+      "replaces": "original-11",
+      "derivativeOfSha256": "d2b8787d1a0f25fdbef72904ccd195f99325aca147a21ec43a6404a91ad0d3a8",
+      "optimized": true,
+      "scene": "elevator"
+    }
+  ],
+  "sourceWidth": 1122,
+  "sourceHeight": 1402,
+  "chapters": [
+    {
+      "id": "exterior",
+      "from": 0,
+      "to": 0.25,
+      "focal": {
+        "x": 0.5,
+        "y": 0.58
+      }
+    },
+    {
+      "id": "hall",
+      "from": 0.38,
+      "to": 0.57,
+      "focal": {
+        "x": 0.5,
+        "y": 0.34
+      }
+    },
+    {
+      "id": "elevator",
+      "from": 0.72,
+      "to": 1,
+      "focal": {
+        "x": 0.5,
+        "y": 0.39
+      }
     }
   ]
 }

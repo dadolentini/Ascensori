@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type ReactNode,
+  type CSSProperties,
 } from 'react';
 import { validateScenario } from './simulation/scenario';
 import type { Scenario } from './simulation/types';
@@ -19,6 +20,9 @@ import Formula from './components/Formula';
 import Icon from './components/Icon';
 import JourneyFallback from './journey/JourneyFallback';
 import VisualReferences from './journey/VisualReferences';
+import JourneyEquations, { journeyEquationState } from './journey/JourneyEquations';
+import IntelligenceSection from './journey/IntelligenceSection';
+import useEditorialMotion from './journey/useEditorialMotion';
 import photoManifest from './journey/sequence/manifest.json';
 import photoOriginals from './journey/sequence/originals.json';
 const PhotoSequence = lazy(() => import('./journey/sequence/PhotoSequence'));
@@ -39,11 +43,11 @@ class SceneBoundary extends Component<
 }
 const phaseCopy = [
   { from: 0, title: 'L’edificio', n: '01' },
-  { from: 0.23, title: 'La soglia', n: '02' },
-  { from: 0.43, title: 'La lobby', n: '03' },
-  { from: 0.6, title: 'La svolta', n: '04' },
-  { from: 0.72, title: 'L’ascensore', n: '05' },
-  { from: 0.83, title: 'Il modello', n: '06' },
+  { from: .203, title: 'Anticipare', n: '02' },
+  { from: .32, title: 'La hall', n: '03' },
+  { from: .465, title: 'La decisione', n: '04' },
+  { from: .61, title: 'L’ascensore', n: '05' },
+  { from: .835, title: 'La capacità', n: '06' },
 ];
 export default function App() {
   const [route, setRoute] = useState(window.location.pathname),
@@ -53,6 +57,8 @@ export default function App() {
   const [reduced, setReduced] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
+  useEditorialMotion(route, reduced);
+  const [loading, setLoading] = useState({ loaded: 0, total: photoManifest.frames.length });
   const [scenario, setScenario] = useState<Scenario>(() =>
     createSimpleScenario(DEFAULT_SIMPLE_CONFIGURATION),
   );
@@ -232,7 +238,10 @@ export default function App() {
             aria-label="Viaggio architettonico"
             data-progress={progress.toFixed(4)}
             data-phase={phase.title}
-            data-photo-stage={progress >= .72 && progress < .83 ? 'opening' : 'journey'}
+            data-photo-stage={progress >= .61 && progress < .835 ? 'opening' : 'journey'}
+            data-equation-active={!!journeyEquationState(progress)}
+            data-ready={ready || fallback}
+            style={{ '--journey-shade': Math.max(0, 1 - progress / .16) * .65 } as CSSProperties}
           >
             <div className="journey-viewport">
               {fallback ? (
@@ -244,14 +253,18 @@ export default function App() {
                       initialProgress={progress}
                       onProgress={setProgress}
                       onReady={() => setReady(true)}
+                      onLoadProgress={(loaded, total) => {
+                        setLoading({ loaded, total });
+                        if (loaded === 0) setReady(false);
+                      }}
                       onFailure={() => setLight(true)}
                     />
                   </Suspense>
                 </SceneBoundary>
               )}
               {!fallback && !ready && (
-                <div className="scene-loading">
-                  <span /> Prepariamo il tuo ingresso
+                <div className="scene-loading" role="status">
+                  <span /> Prepariamo il percorso · {loading.loaded}/{loading.total}
                 </div>
               )}
               {showHero && (
@@ -273,6 +286,7 @@ export default function App() {
                   </p>
                   <button
                     className="hero-journey-link"
+                    disabled={!fallback && !ready}
                     onClick={() => {
                       if (fallback) goToSimulation();
                       else window.scrollTo({ top: window.innerHeight * 1.7, behavior: 'smooth' });
@@ -285,69 +299,20 @@ export default function App() {
                   </button>
                 </div>
               )}
-              {!fallback && progress > 0.23 && progress < 0.43 && (
-                <div
-                  className="scene-caption"
-                  style={{ opacity: Math.min(1, (progress - 0.23) * 20, (0.43 - progress) * 20) }}
-                >
-                  <p className="eyebrow">OGNI GIORNO, OGNI PIANO</p>
-                  <h2>
-                    Il movimento
-                    <br />è parte del progetto.
-                  </h2>
-                </div>
-              )}
-              {!fallback && progress > 0.54 && progress < 0.72 && (
+              {!fallback && progress > .335 && progress < .455 && (
                 <div
                   className="elevator-caption"
-                  style={{ opacity: Math.min(1, (progress - 0.54) * 20, (0.72 - progress) * 20) }}
+                  style={{ opacity: Math.min(1, (progress - .335) * 30, (.455 - progress) * 30) }}
                 >
                   <p className="eyebrow">DENTRO IL PALAZZO</p>
                   <h2>
-                    Una porta.
+                    Ogni viaggio.
                     <br />
-                    <em>Nuove possibilità.</em>
+                    <em>Una scelta migliore.</em>
                   </h2>
                 </div>
               )}
-              {!fallback && progress >= 0.72 && progress < 0.99 && (
-                <div
-                  className="math-overlay"
-                  style={{ opacity: Math.min(1, (progress - 0.72) * 18, (0.99 - progress) * 18) }}
-                >
-                  <p className="eyebrow">LA DECISIONE PRENDE FORMA</p>
-                  <h2>
-                    La bellezza
-                    <br />
-                    <em>di un buon modello.</em>
-                  </h2>
-                  <div className="math-step">
-                    <span>01 / RISPETTARE I LIMITI</span>
-                    <Formula tex={String.raw`L_e+w_r\le Q_e\quad n_e+1\le C_e`} block />
-                  </div>
-                  {progress > 0.78 && (
-                    <div className="math-step">
-                      <span>02 / SCEGLIERE L’INSERIMENTO</span>
-                      <Formula
-                        tex={String.raw`\underset{e,i<j}{\arg\min}\;\big[J_t(S_e\oplus_i P_r\oplus_j D_r)-J_t(S_e)\big]`}
-                        block
-                      />
-                    </div>
-                  )}
-                  {progress > 0.84 && (
-                    <div className="math-step">
-                      <span>03 / ANTICIPARE LA DOMANDA</span>
-                      <Formula
-                        tex={String.raw`\widehat D_o=N_o\widehat p_o\left[\Phi\!\left(\frac{t+L+H-\widehat\mu_o}{\widehat\sigma_o}\right)-\Phi\!\left(\frac{t+L-\widehat\mu_o}{\widehat\sigma_o}\right)\right]`}
-                        block
-                      />
-                    </div>
-                  )}
-                  <p className="math-source">
-                    Equazioni (6), (9), (16) · inserimenti ammissibili · PDF originale
-                  </p>
-                </div>
-              )}
+              {!fallback && <JourneyEquations progress={progress} />}
               {!fallback && (
                 <div
                   className="scene-wash"
@@ -495,6 +460,7 @@ export default function App() {
               onAlgorithms={() => navigate('/algoritmi')}
             />
           )}
+          <IntelligenceSection onAlgorithms={() => navigate('/algoritmi')} />
           <section className="closing-section page-width">
             <p className="eyebrow">DALL’IPOTESI ALLA CONOSCENZA</p>
             <h2>

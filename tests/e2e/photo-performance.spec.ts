@@ -3,6 +3,10 @@ import manifest from '../../src/journey/sequence/manifest.json' with { type: 'js
 import { writeFile } from 'node:fs/promises';
 import { frameAtProgress } from '../../src/journey/sequence/timeline';
 
+// Screencast recording changes the deferred raster cost being benchmarked.
+// Preserve JSON timing evidence without adding diagnostic frame captures.
+test.use({ trace: 'off' });
+
 for (const [width, height] of [[1440, 900], [375, 812]]) {
   test(`measures 90 photographic scroll samples at ${width}px and stops redrawing when idle`, async ({ page }, info) => {
     await page.setViewportSize({ width, height });

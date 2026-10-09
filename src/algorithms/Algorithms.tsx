@@ -3,6 +3,7 @@ import Formula from '../components/Formula';
 import Icon from '../components/Icon';
 import { equations } from './equations';
 import { numberFormat } from '../configurator/helpers';
+import DispatchComparison from './DispatchComparison';
 export default function Algorithms({ onBack }: { onBack: () => void }) {
   const [q, setQ] = useState(1000),
     [cars, setCars] = useState(4),
@@ -14,7 +15,7 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
   const safe = Math.min(13, Math.floor((0.96 * q) / 87));
   return (
     <main className="algorithms-page">
-      <section className="algorithms-hero page-width">
+      <section className="algorithms-hero page-width" id="introduzione">
         <button className="text-link" onClick={onBack}>
           ← Torna all’esperienza
         </button>
@@ -46,11 +47,12 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
         <aside className="algorithms-index">
           <p className="eyebrow">IN QUESTA PAGINA</p>
           {[
-            ['problema', '01 Il problema'],
-            ['politiche', '02 Le tre politiche'],
-            ['esplora', '03 Esplora il modello'],
-            ['equazioni', '04 Le equazioni'],
-            ['metodologia', '05 Metodo e limiti'],
+            ['esempio', '01 Come funziona'],
+            ['decisione', '02 La decisione'],
+            ['previsione', '03 Anticipare il traffico'],
+            ['capacita', '04 Cabine e capacità'],
+            ['equazioni', '05 Il modello matematico'],
+            ['metodologia', '06 Risultati e limiti'],
           ].map(([id, t]) => (
             <a key={id} href={`#${id}`}>
               {t}
@@ -58,8 +60,17 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
           ))}
         </aside>
         <div>
-          <section id="problema" className="editorial-section">
-            <p className="eyebrow">01 / IL PROBLEMA</p>
+          <section id="esempio" className="editorial-section">
+            <p className="eyebrow">01 / COME FUNZIONA CONCRETAMENTE</p>
+            <h2>Al decimo piano.<br /><em>Quattro possibilità.</em></h2>
+            <p>Un dipendente al decimo piano chiama l’ascensore per scendere a terra. Le quattro cabine hanno posizioni,
+              fermate e passeggeri diversi: il motore confronta gli inserimenti fattibili e sceglie quello con il minor costo aggiunto.</p>
+            <p>Prova a liberare la cabina più vicina: i numeri e la scelta vengono ricalcolati dal codice di instradamento del simulatore.</p>
+            <DispatchComparison />
+            <p className="small-note">La destinazione è dichiarata alla chiamata, come previsto dal modello DCS.</p>
+          </section>
+          <section id="decisione" className="editorial-section">
+            <p className="eyebrow">02 / COME VIENE PRESA LA DECISIONE</p>
             <h2>
               Il viaggio più breve
               <br />
@@ -72,9 +83,15 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
             </p>
             <p>
               Una richiesta <i>r</i> compare in <i>aᵣ</i>, entra in <i>pᵣ</i>, esce in <i>dᵣ</i>.
-              Origine e destinazione sono note alla chiamata: entrambe le politiche presuppongono un
+              Origine e destinazione sono note alla chiamata: tutte le politiche presuppongono un
               sistema DCS, con destinazione dichiarata.
             </p>
+            <div className="decision-factors">
+              <div><strong>Posizione e moto</strong><p>Una tratta già iniziata mantiene la destinazione. Il tempo stimato include il moto residuo.</p></div>
+              <div><strong>Fermate programmate</strong><p>Prelievo e sbarco vengono provati in tutti gli inserimenti ammissibili.</p></div>
+              <div><strong>Passeggeri e ritardi</strong><p>Il costo aggiunto considera la nuova chiamata e l’impatto sulle richieste esistenti.</p></div>
+            </div>
+            <Formula tex={equations.find((equation) => equation.n === 9)!.tex} block label="Equazione 9: scelta dell’inserimento con il minor costo marginale" />
             <div className="definition-grid">
               <div>
                 <span>ATTESA</span>
@@ -95,8 +112,14 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
               di apertura e chiusura.
             </p>
           </section>
-          <section id="politiche" className="editorial-section">
-            <p className="eyebrow">02 / UN CONFRONTO APPAIATO</p>
+          <section id="previsione" className="editorial-section">
+            <p className="eyebrow">03 / COME ANTICIPA IL TRAFFICO</p>
+            <h2>Essere pronti.<br /><em>Prima della chiamata.</em></h2>
+            <p>Ingresso, pause e uscita dagli uffici danno una struttura al traffico. La strategia adattiva apprende
+              partecipazione, orario medio e dispersione dai conteggi delle giornate di training, separati da quelli della verifica.</p>
+            <p>La domanda attesa in una finestra futura orienta il posizionamento delle sole cabine inattive.
+              Nel preset standard la finestra va da tre a quindici minuti in avanti. Le cabine impegnate continuano a servire le richieste.</p>
+            <Formula tex={equations.find((equation) => equation.n === 16)!.tex} block label="Equazione 16: domanda attesa nella finestra futura" />
             <h2>
               Stessa domanda.
               <br />
@@ -134,8 +157,15 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
               controllo di un costruttore commerciale.
             </p>
           </section>
-          <section id="esplora" className="editorial-section">
-            <p className="eyebrow">03 / TOCCA IL MODELLO</p>
+          <section id="capacita" className="editorial-section">
+            <p className="eyebrow">04 / COME GESTISCE LE CABINE PIENE</p>
+            <h2>Un posto disponibile.<br /><em>Al momento giusto.</em></h2>
+            <p>La pianificazione verifica posti e carico previsto lungo tutte le fermate candidate. Una cabina oggi piena
+              può essere utilizzabile dopo uno sbarco. All’imbarco si controlla il peso effettivo: se l’ingresso viene respinto,
+              la richiesta resta in attesa e viene riassegnata per ETA fra le cabine ammissibili.</p>
+            <Formula tex={equations.find((equation) => equation.n === 6)!.tex} block label="Equazione 6: vincoli distinti di carico e persone" />
+            <p>Per le chiamate future il modello riserva prudenzialmente 87 kg per passeggero e usa il 96% della portata,
+              come nell’equazione (7). Per chi è già a bordo usa la massa reale. Le chiamate già assegnate non vengono continuamente riassegnate.</p>
             <h2>
               Dalla formula
               <br />
@@ -191,7 +221,7 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
             </div>
           </section>
           <section id="equazioni" className="editorial-section">
-            <p className="eyebrow">04 / LA FONTE AUTOREVOLE</p>
+            <p className="eyebrow">05 / IL MODELLO MATEMATICO</p>
             <h2>
               Le equazioni,
               <br />
@@ -222,19 +252,21 @@ export default function Algorithms({ onBack }: { onBack: () => void }) {
                       {eq.kind === 'Ricerca' ? 'non implementata' : 'non simulazione dinamica'}
                     </span>
                   )}
-                  <Formula tex={eq.tex} block />
+                  <Formula tex={eq.tex} block label={`Equazione ${eq.n}: ${eq.title}`} />
                   <p>{eq.explanation}</p>
                 </article>
               ))}
             </div>
           </section>
           <section id="metodologia" className="editorial-section">
-            <p className="eyebrow">05 / METODO E LIMITI</p>
+            <p className="eyebrow">06 / RISULTATI E LIMITI</p>
             <h2>
               Misurabile.
               <br />
               <em>Non infallibile.</em>
             </h2>
+            <p>Il configuratore misura attesa media, P95 e richieste completate su una domanda sintetica identica per le tre strategie.
+              Un miglioramento compare solo se è calcolato nella simulazione: non è una misura delle prestazioni dell’edificio reale.</p>
             <h3>Esperimenti riproducibili</h3>
             <p>
               Il seed, lo scenario e la versione del motore sono esportati con i risultati. Una

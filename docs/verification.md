@@ -1,5 +1,33 @@
 # Verifica finale
 
+## Revisione cinematografica e spiegazione — 9 ottobre 2026
+
+Stato attuale: **10 frame attivi in tre capitoli**, nessun nuovo fotogramma generato in questa revisione, tutti i **12 originali invariati**. Selezione, allegati esclusi e limiti in [cinematic-revision.md](cinematic-revision.md). Le sezioni successive conservano le verifiche storiche.
+
+- `npm test`: **93/93 superati in 12 file**. Coperti invarianti del modello, esempio calcolato delle quattro cabine, hash/provenienza degli asset, precaricamento completo/annullamento/errori, timeline inversa, crop, proporzioni e buffer proporzionati al dettaglio fotografico.
+- `npm run build`: **superato**, controllo TypeScript incluso, anche dopo la correzione finale della testata fotografica. Nessuna dipendenza aggiunta.
+- `PLAYWRIGHT_PREVIEW=1 npx playwright test --output=test-results/cinematic-final-cpu`: **41/41 superati**, nessuna esclusione o retry, un worker, circa 1,4 minuti. Dopo la piccola correzione del contrasto immediato nella testata: **3/3 verifiche mirate superate** su build aggiornata (sequenza reversibile, composizione esplicativa, inquadrature dell’ingresso), in `test-results/cinematic-header-final`.
+- Entrambi i test trattengono davvero l’ultimo download a desktop e mobile: nessun avanzamento del Canvas prima della decodifica completa. Confermati gestione del file corrotto e uso del configuratore nel fallback.
+- Lo spy segue le sorgenti reali `ImageBitmap → Canvas di composizione → Canvas visibile`: nessun errore fra richiesta e fotografia visibile, contributori del blending coerenti, **zero refetch e zero bitmap liberati durante lo scroll**. Il rinvio del disegno è consentito soltanto sotto una superficie realmente opaca che copre la viewport; due regressioni verificano assenza di disegni superflui e ripristino del frame corrente prima di tornare visibile.
+- Verificati scroll avanti/indietro, pin, ritorno dalla pagina algoritmi, ridimensionamento, DPR elevato, palazzo iniziale interamente visibile e landmark architettonici dell’ingresso. Le formule sono accessibili anche a 320/375 px e nelle finestre 844 × 390 e 1280 × 600, con scroll locale e sorgenti raggiungibili.
+- Tutti i sei flussi del configuratore usano il **Worker reale**: scenario standard, distribuzione degli addetti, esportazioni, annullamento, input invalidi, domanda nulla e conservazione dei risultati fra le pagine. Configuratore e risultati restano stabili durante lo scroll.
+- Le 19 equazioni e il PDF sono invariati; l’esempio interattivo richiama il motore esistente ed è dichiarato illustrativo. Verificato diff nullo per `src/simulation`, `src/configurator`, `src/algorithms/equations.ts`, `public/docs`, `package.json` e lockfile.
+
+### Misure finali e condizioni
+
+Chromium headless cloud, **rasterizzatore CPU nativo del Canvas 2D**, DPR 1, nessuna simulazione concomitante e nessuna registrazione screencast nel benchmark. Per ciascuna viewport: 90 campioni rAF sul percorso completo `.15 → .8 → .15`, poi 90 campioni con sei inversioni rapide del tratto fotografico `.06 → .96`. Le sorgenti reali e la copertura dei pannelli sono osservate indipendentemente durante la misura.
+
+| Viewport | P95 / massimo percorso | P95 / massimo inversioni rapide | P95 chiamata drawImage | Immagini decodificate |
+| --- | --- | --- | --- | --- |
+| 1440 × 900 | 16,8 / 16,8 ms | 16,8 / 33,3 ms | 1,5 ms | 40.140.800 byte |
+| 375 × 812 | 16,8 / 16,8 ms | 16,7 / 16,8 ms | 0,6 ms | 15.680.000 byte |
+
+Il budget del test resta P95 ≤ 87,45 ms e massimo ≤ 150,5 ms, senza allentamenti. Entrambe le viewport lo rispettano. Nei 180 campioni, 44 sono coperti completamente dal pannello matematico; la correttezza del frame resta obbligatoria in ogni campione in cui la fotografia è visibile. Nessun long task osservato; zero ridisegni a riposo. JSON e screenshot della prova sono in `test-results/cinematic-final-cpu/`, ignorata da Git.
+
+La configurazione storica forzava **SwiftShader**, il backend 3D emulato della vecchia scena. Sullo stesso codice la suite con quel backend ha prodotto **40 superati e 1 fallito**: desktop P95 100 ms, massimo 183,3 ms, oltre il budget. Le correttezze di frame e modello passavano. Un confronto controllato degli stessi 180 campioni con Canvas 2D CPU ha isolato il costo del backend; il vecchio modo rimane riproducibile con `PLAYWRIGHT_SWIFTSHADER=1 PLAYWRIGHT_PREVIEW=1 npm run test:e2e` e il suo limite non è dichiarato risolto. Le opzioni dei test non cambiano il rendering del sito nel browser dell’utente.
+
+Registrazione e backend sono cambiati rispetto alle misure storiche: questi numeri **non dimostrano una percentuale di miglioramento attribuibile al solo codice** e non certificano 60 FPS su Safari, GPU reali o telefoni fisici. Il budget delle immagini non comprende Canvas, GPU, decodifica temporanea o cache HTTP. Il percorso resta una narrazione fotografica per capitoli, con pose distanziate e dettagli rigenerati degli intermedi precedenti; non è una ripresa multivista geometricamente calibrata. Nessun deployment pubblico.
+
 ## Sequenza ampliata e correzioni — 8 ottobre 2026
 
 Integrati 18 frame attivi: 10 originali, 2 ritagli selezionati dai nuovi archivi, 4 intermedi generati e 2 correzioni mirate. Tutti i 12 originali sono preservati byte per byte. Selezione e limiti in [sequence-integration.md](sequence-integration.md), inventario completo in [visual-audit/sequence-selection.json](visual-audit/sequence-selection.json).

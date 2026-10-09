@@ -1,6 +1,6 @@
 # VERTICALE — mobilità verticale intelligente
 
-Percorso fotografico controllato dallo scroll e simulatore di un gruppo di ascensori. Interfaccia italiana; simulazione della flotta indipendente dalla rappresentazione visiva. Il branch `photo-sequence` usa Canvas 2D e una sequenza di 18 frame, inclusa l’apertura progressiva dell’ascensore. Selezione, provenienza e limiti sono descritti in [docs/sequence-integration.md](docs/sequence-integration.md).
+Percorso fotografico controllato dallo scroll e simulatore di un gruppo di ascensori. Interfaccia italiana; simulazione della flotta indipendente dalla rappresentazione visiva. Il branch `photo-sequence` usa Canvas 2D, precaricamento completo e 10 frame ottimizzati in tre capitoli, raccordati dalle equazioni autentiche. La spiegazione fotografica e la pagina degli algoritmi accompagnano l’utente dalla decisione concreta al modello. Dettagli della revisione in [docs/cinematic-revision.md](docs/cinematic-revision.md).
 
 ## Avvio
 
@@ -28,15 +28,18 @@ PLAYWRIGHT_PREVIEW=1 npm run test:e2e
 
 Eseguire prima `npm run build`. Playwright avvia la preview; screenshot, esportazioni JSON, trace e rapporto HTML vengono salvati in `test-results/`, esclusa da Git. Per altri ambienti, impostare il percorso del browser in `playwright.config.ts` oppure utilizzare il Chromium gestito da Playwright.
 
+I test cloud usano il rasterizzatore CPU del Canvas 2D e i benchmark non registrano screencast. Per riprodurre il vecchio backend 3D emulato: `PLAYWRIGHT_SWIFTSHADER=1 PLAYWRIGHT_PREVIEW=1 npm run test:e2e`. Quel backend conserva un limite prestazionale desktop documentato in [docs/verification.md](docs/verification.md). Queste opzioni riguardano il banco di prova; il sito usa il rendering scelto dal browser dell’utente.
+
 ## Esperienza
 
-- Canvas 2D fotografico: palazzo completo, ingresso, lobby, svolta a destra, avvicinamento all’ascensore, apertura, equazioni e configuratore. Sequenza attiva di 18 frame: 10 originali, 2 ritagli forniti, 4 intermedi generati e 2 correzioni mirate. I 12 file originali restano intatti e disponibili come riferimenti.
-- GSAP anima `seq.frame`; ScrollTrigger gestisce scrub e pin. Rendering su `requestAnimationFrame` solo quando necessario, preload prioritario e cache di bitmap limitata secondo il dispositivo.
-- Fotografie originali importate senza alterare i byte; nuovi asset in WebP lossless, con verifica dei pixel. Font e PDF locali, nessuna ricostruzione Three.js o richiesta a servizi esterni durante l’uso del sito. Gli intermedi generati sono approssimazioni visive: restano variazioni di luce, texture e prospettiva, documentate nella relazione.
+- Tre capitoli fotografici: palazzo e ingresso, attraversamento della hall, ascensore frontale con apertura progressiva. Pannelli matematici chiari raccordano i cambi di scena. I 12 originali restano intatti e disponibili come riferimenti; la selezione attiva evita viste architettonicamente incoerenti.
+- GSAP anima `seq.frame`; ScrollTrigger gestisce scrub e pin. Tutte le immagini sono precaricate e decodificate in un array prima dell’avvio: nessuna evizione o nuovo download durante l’avanzamento e il ritorno. Rendering su `requestAnimationFrame` solo quando necessario e buffer dimensionati secondo le risorse del dispositivo.
+- Derivati WebP 896 × 1120, qualità 88, circa 1,43 MB complessivi; font e PDF locali. Nessuna nuova generazione in questa revisione, nessuna ricostruzione Three.js o richiesta a servizi esterni durante l’uso del sito. La sequenza usa anche intermedi generati nella revisione precedente: non è una ripresa continua con camera calibrata.
 - DPR fino a 2 desktop/1,5 mobile, resize proporzionale, versione essenziale e preferenza di movimento ridotto con gli stessi frame. Il percorso funziona anche senza WebGL.
 - Configuratore semplificato: quattro input per ascensori, piani **escluso terra**, addetti complessivi e capacità in persone. Controlli +/− e media automatica per piano; orari e pause standard gestiti internamente.
 - Calcolo in Web Worker, annullamento, confronto di tre politiche, contatori di censura, CDF completa, apprendimento fuori campione, replay degli eventi e download CSV/JSON.
 - Pagina `/algoritmi` con tutte le 19 equazioni, unità, spiegazioni, esplorazioni di moto/capacità e collegamenti al PDF originale.
+- Sotto i risultati, la fotografia originale della hall fa da sfondo a tre spiegazioni: assegnazione, previsione e capacità. Nella pagina algoritmi l’esempio interattivo al decimo piano richiama il vero instradamento per confrontare quattro cabine; è uno stato illustrativo dichiarato, non un risultato sul campo.
 
 ## Organizzazione
 

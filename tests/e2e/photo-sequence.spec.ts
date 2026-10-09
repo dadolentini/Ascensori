@@ -2,29 +2,24 @@ import { test, expect, screenshot } from './browser.spec';
 import manifest from '../../src/journey/sequence/manifest.json' with { type: 'json' };
 import { frameAtProgress } from '../../src/journey/sequence/timeline';
 
-test('initial framing keeps moving when the next photograph is still downloading', async ({ page }) => {
+test('keeps the first photograph visible and starts animation only after every photograph decodes', async ({ page }) => {
   let release!: () => void;
   const blocked = new Promise<void>((resolve) => { release = resolve; });
-  await page.route(`**${manifest.frames[1].url}`, async (route) => {
+  await page.route(`**${manifest.frames.at(-1)!.url}`, async (route) => {
     await blocked; await route.continue();
   });
   try {
     await page.goto('/');
+    await expect(page.locator('canvas')).toHaveAttribute('data-preload-count', String(manifest.frames.length - 1));
+    await expect(page.locator('.sequence-poster')).toBeVisible();
+    await expect(page.locator('canvas')).toHaveAttribute('data-animation-ready', 'false');
+    await page.evaluate(() => window.scrollTo({ top: innerHeight * .4, behavior: 'instant' }));
+    await expect(page.locator('canvas')).toHaveAttribute('data-preload-ready', 'false');
+    expect(await page.locator('canvas').getAttribute('data-requested-frame')).toBeNull();
+    release();
+    await expect(page.locator('canvas')).toHaveAttribute('data-preload-ready', 'true');
+    await expect(page.locator('canvas')).toHaveAttribute('data-animation-ready', 'true');
     await expect(page.locator('canvas')).toHaveAttribute('data-painted', 'true');
-    async function move(progress: number) {
-      await page.locator('.journey').evaluate((el, p) => window.scrollTo({
-        top: el.getBoundingClientRect().top + scrollY + (el.clientHeight - innerHeight) * .83 * p,
-        behavior: 'instant',
-      }), progress);
-      await expect.poll(async () => Number(await page.locator('canvas').getAttribute('data-requested-frame')))
-        .toBeCloseTo(frameAtProgress(progress, manifest.frames.map((frame) => frame.at)), 2);
-    }
-    await move(.005);
-    const initialWidth = JSON.parse((await page.locator('canvas').getAttribute('data-image-rect'))!).width;
-    await move(.02);
-    await expect(page.locator('canvas')).toHaveAttribute('data-frame-ready', 'false');
-    await expect.poll(async () => JSON.parse((await page.locator('canvas').getAttribute('data-image-rect'))!).width)
-      .toBeGreaterThan(initialWidth + 1);
   } finally { release(); }
 });
 
@@ -73,7 +68,7 @@ test('photographic Canvas 2D is pinned, reversible and survives route navigation
     await screenshot(page, info, frame.id);
   }
   await seek(page, .85);
-  await expect(page.locator('.math-overlay')).toContainText('ANTICIPARE LA DOMANDA');
+  await expect(page.locator('.journey-equation[data-equation="6"]')).toContainText('Ogni posto conta.');
   await page.getByRole('link', { name: /Gli algoritmi/ }).click();
   await page.getByRole('button', { name: /Torna all’esperienza/ }).click();
   await expect(page.locator('canvas')).toHaveAttribute('data-renderer', 'photographic-2d');
@@ -93,7 +88,10 @@ test.describe('responsive resize of the mounted renderer', () => {
     const heading = await page.locator('.hero-copy').boundingBox();
     expect(heading!.y).toBeGreaterThanOrEqual(rect.y + rect.height - 1);
     await page.setViewportSize({ width: 375, height: 812 }); await seek(page, .8);
-    expect(Number(await page.locator('canvas').getAttribute('data-cache-bytes'))).toBeLessThanOrEqual(32 * 1024 * 1024);
+    const memory = await page.locator('canvas').evaluate((canvas) => ({
+      bytes: Number(canvas.dataset.cacheBytes), budget: Number(canvas.dataset.decodeBudget),
+    }));
+    expect(memory.bytes).toBeLessThanOrEqual(memory.budget);
   });
 });
 
